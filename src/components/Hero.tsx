@@ -16,7 +16,7 @@ export const Hero = () => {
           {/* Status Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 mb-8">
             <span className="text-zinc-400 text-[10px] uppercase tracking-widest font-bold flex items-center gap-2">
-              <span className="inline-block w-1.5 h-1.5 bg-zinc-500 rounded-full animate-pulse" />
+              <span className="inline-block w-1.5 h-1.5 bg-green-600 rounded-full animate-pulse" />
               Available for Work
             </span>
           </div>
