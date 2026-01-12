@@ -11,35 +11,35 @@ import kurakaniImage from '../assets/KuraKani_Logo.png'
 import freemanImage from '../assets/Freeman_Logo.png'
 
 export const PROFILE = {
-  name: "Sushant Neupane", // [cite: 1]
-  role: "Software Engineer", // [cite: 15]
-  email: "nsushant09@gmail.com", // [cite: 2]
-  phone: "+61 470606448", // [cite: 2]
-  location: "Melbourne, Australia", // [cite: 8]
+  name: "Sushant Neupane", 
+  role: "Software Engineer",
+  email: "nsushant09@gmail.com",
+  phone: "+61 470606448", 
+  location: "Melbourne, Australia", 
   experienceYears: "2+",
-  education: "Master of Information Technology", // [cite: 5]
+  education: "Master of Information Technology",
 };
 
 export const SKILLS_CATEGORIES = [
   {
     title: "Programming Languages",
     icon: Code2,
-    skills: ["Kotlin", "Java", "Swift", "JavaScript", "TypeScript", "PHP", "SQL"] // [cite: 43]
+    skills: ["Kotlin", "Java", "Swift", "JavaScript", "TypeScript", "PHP", "SQL"]
   },
   {
     title: "Frameworks & Libraries",
     icon: Layers,
-    skills: ["Jetpack Compose", "React", "Spring Boot", "Spring", "Node.js", "Express.js", "Next.js"] // [cite: 43]
+    skills: ["Jetpack Compose", "React", "Spring Boot", "Spring", "Node.js", "Express.js", "Next.js"] 
   },
   {
     title: "Backend & Services",
     icon: Database,
-    skills: ["Firebase", "AWS", "MySQL", "PostgreSQL", "Nginx", "MongoDB", "Redis"] // [cite: 25, 44]
+    skills: ["Firebase", "AWS", "MySQL", "PostgreSQL", "Nginx", "MongoDB", "Redis"] 
   },
   {
     title: "DevOps & Tools",
     icon: Settings,
-    skills: ["Docker", "Kubernetes", "GitHub Actions", "CI/CD", "Gradle", "Git", "Linux"] // [cite: 19, 38, 44]
+    skills: ["Docker", "Kubernetes", "GitHub Actions", "CI/CD", "Gradle", "Git", "Linux"] 
   },
   {
     title: "Mobile Development",
