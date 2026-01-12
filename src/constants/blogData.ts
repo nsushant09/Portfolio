@@ -1,5 +1,5 @@
 
-const BLOGS_FOLDER = "../../public/blogs";
+const BLOGS_FOLDER = "../blogs";
 export interface Blog {
     title: string;
     excerpt: string;
