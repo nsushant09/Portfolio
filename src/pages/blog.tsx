@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { BlogCard } from "../components/BlogCard";
 import { BLOGS } from "../constants/blogData"; // We'll create this next
 
 export const Blog = () => {
-  const [blogs, setBlogs] = useState(BLOGS);
+  const [blogs] = useState(BLOGS);
 
   return (
     <section className="py-24 px-6 max-w-6xl mx-auto">
