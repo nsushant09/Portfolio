@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Menu, X } from "lucide-react"; // Make sure to install lucide-react
 import { PROFILE } from "./constants/data";
 
 import { Hero } from "./components/Hero";
@@ -12,44 +14,69 @@ import { BlogPost } from "./pages/blogPost";
 import { ScrollToHash } from "./components/ScrollToHash";
 
 function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  // Helper to close menu when clicking a link
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
     <Router>
-      {/* 👇 Hash scroll handler */}
       <ScrollToHash />
 
       <div className="bg-[#0a0a0a] min-h-screen text-white selection:bg-white selection:text-black">
         {/* Navigation */}
         <nav className="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-zinc-800">
           <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <Link to="/" className="font-bold tracking-tighter text-xl">
+            <a href="/" onClick={closeMenu} className="font-bold tracking-tighter text-xl">
               Sushant Neupane
-            </Link>
+            </a>
 
+            {/* Desktop Navigation */}
             <div className="hidden md:flex gap-8 text-sm text-zinc-400">
-              <a href="/#projects" className="hover:text-white transition-colors">
-                Projects
-              </a>
-
-              <a href="/#experience" className="hover:text-white transition-colors">
-                Experience
-              </a>
-
-              <Link to="/blog" className="hover:text-white transition-colors">
-                Blog
-              </Link>
-
-              <a href="/#contact" className="hover:text-white transition-colors">
-                Contact
-              </a>
+              <a href="/#projects" className="hover:text-white transition-colors">Projects</a>
+              <a href="/#experience" className="hover:text-white transition-colors">Experience</a>
+              <Link to="/blog" className="hover:text-white transition-colors">Blog</Link>
+              <a href="/#contact" className="hover:text-white transition-colors">Contact</a>
             </div>
 
+            {/* Desktop Hire Me Button */}
             <a
               href={`mailto:${PROFILE.email}`}
-              className="text-xs border border-zinc-700 px-4 py-2 rounded-full hover:bg-white hover:text-black transition-all"
+              className="hidden md:block text-xs border border-zinc-700 px-4 py-2 rounded-full hover:bg-white hover:text-black transition-all"
             >
               Hire Me
             </a>
+
+            {/* Mobile Menu Toggle Button */}
+            <button 
+              className="md:hidden p-2 text-zinc-400 hover:text-white focus:outline-none"
+              onClick={toggleMenu}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
+
+          {/* Mobile Navigation Dropdown */}
+          {isMenuOpen && (
+            <div className="md:hidden bg-[#0a0a0a] border-b border-zinc-800 w-full">
+              <div className="flex flex-col p-6 gap-6 text-zinc-400">
+                <a href="/#projects" onClick={closeMenu} className="hover:text-white text-lg">Projects</a>
+                <a href="/#experience" onClick={closeMenu} className="hover:text-white text-lg">Experience</a>
+                <Link to="/blog" onClick={closeMenu} className="hover:text-white text-lg">Blog</Link>
+                <a href="/#contact" onClick={closeMenu} className="hover:text-white text-lg">Contact</a>
+                <hr className="border-zinc-800" />
+                <a
+                  href={`mailto:${PROFILE.email}`}
+                  className="text-center text-sm border border-zinc-700 py-3 rounded-full hover:bg-white hover:text-black transition-all"
+                >
+                  Hire Me
+                </a>
+              </div>
+            </div>
+          )}
         </nav>
 
         {/* Routes */}

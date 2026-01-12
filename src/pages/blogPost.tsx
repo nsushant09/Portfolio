@@ -38,7 +38,7 @@ export const BlogPost = () => {
             remarkPlugins={[remarkGfm]} 
             rehypePlugins={[rehypeHighlight]}
             components={{
-              h1: ({node, ...props}) => <h1 className="text-6xl text-center font-bold mt-8 mb-16" {...props} />,
+              h1: ({node, ...props}) => <h1 className="text-5xl text-center font-bold mt-8 mb-16" {...props} />,
               h2: ({node, ...props}) => <h2 className="text-3xl font-bold mt-12 mb-6 border-b border-zinc-800 pb-2" {...props} />,
               h3: ({node, ...props}) => <h3 className="text-2xl font-semibold mt-8 mb-4 border-b border-zinc-800 pb-2" {...props} />,
               p: ({node, ...props}) => <p className="leading-8 mb-6 text-zinc-300 text-justify " {...props} />,
