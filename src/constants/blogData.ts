@@ -11,6 +11,22 @@ export interface Blog {
   
   // Categories: DevOps/AI/SDE/Cloud
   export const BLOGS: Blog[] = [
+    // {
+    //   title: "Real-World Applications of Machine Learning",
+    //   excerpt: "A deep dive into how industries like Retail, Banking, and Manufacturing leverage Machine Learning for demand forecasting, risk assessment, and predictive maintenance.",
+    //   category: "AI",
+    //   date: "Jan 14, 2026",
+    //   slug: "ml-applications-real-world",
+    //   file: `${BLOGS_FOLDER}/ml-applications.md`
+    // },
+    {
+      title: "Challenges in the Machine Learning Lifecycle",
+      excerpt: "An analysis of the core obstacles in ML, from data scarcity and sampling bias to the complexities of model generalization and production deployment.",
+      category: "AI",
+      date: "Jan 14, 2026",
+      slug: "ml-lifecycle-challenges",
+      file: `${BLOGS_FOLDER}/ml-challenges.md`
+    },
     {
       title: "AI vs. Machine Learning vs. Deep Learning",
       excerpt: "An exploration of the hierarchy between Artificial Intelligence, Machine Learning, and Deep Learning, explaining how systems evolved from hard-coded rules to autonomous feature extraction using neural networks.",
