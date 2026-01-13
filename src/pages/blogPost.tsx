@@ -10,14 +10,15 @@ export const BlogPost = () => {
   const { slug } = useParams();
   const [content, setContent] = useState<string>("");
   
-  // Find the blog metadata to access the date
+  // Find the blog metadata to access the date and file path
   const blogMetadata = BLOGS.find((b) => b.slug === slug);
 
   useEffect(() => {
     if (slug && blogMetadata) {
       fetch(blogMetadata.file)
         .then((res) => res.text())
-        .then((text) => setContent(text));
+        .then((text) => setContent(text))
+        .catch((err) => console.error("Error fetching markdown:", err));
     }
   }, [slug, blogMetadata]);
 
@@ -38,20 +39,45 @@ export const BlogPost = () => {
             remarkPlugins={[remarkGfm]} 
             rehypePlugins={[rehypeHighlight]}
             components={{
+              // Headers
               h1: ({node, ...props}) => <h1 className="text-5xl text-center font-bold mt-8 mb-16" {...props} />,
               h2: ({node, ...props}) => <h2 className="text-3xl font-bold mt-12 mb-6 border-b border-zinc-800 pb-2" {...props} />,
               h3: ({node, ...props}) => <h3 className="text-2xl font-semibold mt-8 mb-4 border-b border-zinc-800 pb-2" {...props} />,
-              p: ({node, ...props}) => <p className="leading-8 mb-6 text-zinc-300 text-justify " {...props} />,
+              
+              // Text and Lists
+              p: ({node, ...props}) => <p className="leading-8 mb-6 text-zinc-300 text-justify" {...props} />,
               ul: ({node, ...props}) => <ul className="list-disc ml-6 mb-6 space-y-2 text-zinc-300 text-lg" {...props} />,
               ol: ({node, ...props}) => <ol className="list-decimal ml-6 mb-6 space-y-2 text-zinc-300 text-lg" {...props} />,
               li: ({node, ...props}) => <li className="text-lg" {...props} />,
-              blockquote: ({node, ...props}) => (
-                <blockquote className="border-l-4 border-zinc-500 pl-4 italic my-6 text-zinc-400 " {...props} />
+              
+              // Image Centering and Captioning Logic
+              img: ({node, ...props}) => (
+                <span className="flex flex-col items-center my-8">
+                  <img 
+                    {...props} 
+                    className="rounded-xl border border-zinc-900 max-w-full md:max-w-[85%] h-auto" 
+                    alt={props.alt || "Blog Image"}
+                  />
+                  {props.alt && (
+                    <span className="text-zinc-500 text-sm mt-2 italic text-center block w-full">
+                      {props.alt}
+                    </span>
+                  )}
+                </span>
               ),
+
+              // Blockquote
+              blockquote: ({node, ...props}) => (
+                <blockquote className="border-l-4 border-zinc-500 pl-4 italic my-6 text-zinc-400" {...props} />
+              ),
+              
+              // Horizontal Rule
               hr: () => <hr className="my-8 border-zinc-800" />,
+              
+              // Code Blocks
               code: ({node, inline, className, children, ...props}: any) => {
                 return (
-                  <code className={`${className} rounded-lg px-2 py-2 `} {...props}>
+                  <code className={`${className} rounded-lg px-2 py-2`} {...props}>
                     {children}
                   </code>
                 );
