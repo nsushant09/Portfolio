@@ -14,11 +14,11 @@ import { BlogPost } from "./pages/blogPost";
 import { ScrollToHash } from "./components/ScrollToHash";
 
 function App() {
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  // Helper to close menu when clicking a link
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
