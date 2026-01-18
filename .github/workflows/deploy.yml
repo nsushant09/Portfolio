@@ -49,7 +49,7 @@ jobs:
             # Run container on port 80
             docker run -d \
               --name portfolio-app \
-              -p 80:80 \
+              -p 8081:8081 \
               sushantneupane/portfolio:latest
             
             # Cleanup space on Amazon Linux
