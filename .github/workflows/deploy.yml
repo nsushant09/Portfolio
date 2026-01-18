@@ -1,0 +1,56 @@
+name: Deploy Portfolio to Amazon Linux EC2
+
+on:
+  push:
+    branches:
+      - main
+    # Runs on every push to main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker Image
+        # Since files are in the root, we use '.' as the context
+        run: docker build -t portfolio .
+          
+      - name: Tag and Push Image
+        run: |
+          docker tag portfolio sushantneupane/portfolio:latest
+          docker push sushantneupane/portfolio:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_IP }}
+          username: ec2-user
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Pull the latest image
+            docker pull sushantneupane/portfolio:latest
+            
+            # Stop and remove existing container
+            docker stop portfolio-app || true
+            docker rm portfolio-app || true
+            
+            # Run container on port 80
+            docker run -d \
+              --name portfolio-app \
+              -p 80:80 \
+              sushantneupane/portfolio:latest
+            
+            # Cleanup space on Amazon Linux
+            docker image prune -f
