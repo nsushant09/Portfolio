@@ -5,6 +5,7 @@ import { PROFILE } from "./constants/data";
 
 import { Hero } from "./components/Hero";
 import { Skills } from "./components/Skills";
+import { Education } from "./components/Education";
 import { Experience } from "./components/Experience";
 import { Projects } from "./components/Projects";
 import { Contact } from "./components/Contact";
@@ -14,7 +15,7 @@ import { BlogPost } from "./pages/blogPost";
 import { ScrollToHash } from "./components/ScrollToHash";
 
 function App() {
-  
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -50,7 +51,7 @@ function App() {
             </a>
 
             {/* Mobile Menu Toggle Button */}
-            <button 
+            <button
               className="md:hidden p-2 text-zinc-400 hover:text-white focus:outline-none"
               onClick={toggleMenu}
               aria-label="Toggle menu"
@@ -94,6 +95,7 @@ function App() {
                 </>
               }
             />
+
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
           </Routes>
@@ -103,7 +105,7 @@ function App() {
           © {new Date().getFullYear()} {PROFILE.name}. All Rights Reserved.
         </footer>
       </div>
-    </Router>
+    </Router >
   );
 }
 
