@@ -42,6 +42,14 @@ export interface Blog {
       date: "Jan 12, 2026",
       slug: "machine-learning-fundamentals",
       file: `${BLOGS_FOLDER}/machine-learning-fundamentals.md`
+    },
+    {
+      title: "Privacy Policy for Kastha",
+      excerpt: "Privacy Policy for Kastha",
+      category: "Android",
+      date: "Mar 15, 2026",
+      slug: "kastha-privacy-policy",
+      file: `${BLOGS_FOLDER}/kastha-privacy-policy.md`
     }
   ];
   
