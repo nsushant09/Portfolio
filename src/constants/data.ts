@@ -6,6 +6,7 @@ import {
 import kasthaImage from '../assets/Kastha_Logo.png'
 import kurakaniImage from '../assets/KuraKani_Logo.png'
 import freemanImage from '../assets/Freeman_Logo.png'
+import zhenkalaImage from '../assets/Zhenkala_Logo.png'
 
 export const PROFILE = {
   name: "Sushant Neupane",
@@ -21,16 +22,16 @@ export const EDUCATION = [
   {
     institution: "La Trobe University",
     location: "Melbourne, Australia",
-    degree: "Master of Information Technology",
-    date: "Nov 2025 - July 2027",
+    degree: "Master of Information Technology (Specialising in Artificial Intelligence)",
+    date: "2025 – Jul 2027",
     description: ""
   },
   {
     institution: "The British College",
     location: "Kathmandu, Nepal",
-    degree: "BSc (Hons) Computing",
-    date: "Sept 2020 - Sept 2024",
-    description: "Recipient of the Student Excellence Award for academic and extra-curricular leadership."
+    degree: "BSc (Hons) Computing — First Class Honours",
+    date: "2021 – 2024",
+    description: ""
   }
 ];
 
@@ -57,41 +58,48 @@ export const EXPERIENCE = [
     role: "Junior Software Engineer",
     company: "I.T. Security College of Computer Studies",
     location: "Kathmandu, Nepal",
-    date: "June 2025 - Nov 2025",
-    desc: "Migrated legacy Java modules to Jetpack Compose and Kotlin Multiplatform. Architected a full CI/CD pipeline using GitHub Actions to automate Docker containerization & deployment. Deployed and managed a scalable Kubernetes (K8s) cluster on AWS EC2. Configured Nginx Reverse Proxy for secure domain routing and implemented SSL (HTTPS) termination. Optimized build cycles by configuring Gradle build variants and automated release workflows.",
-    skills: ["Kotlin", "Jetpack Compose", "KMP", "Docker", "Kubernetes", "AWS", "GitHub Actions", "Nginx"]
-  },
-  {
-    role: "Freelance Android Developer",
-    company: "Upwork",
-    location: "Remote",
-    date: "Sept 2024 - May 2025",
-    desc: "Developed and scaled three Android applications to 1M+ total downloads on the Google Play Store. Engineered a file-system integration layer to manage system and application data storage. Integrated Google AdMob for monetization and monitored application health using Firebase Crashlytics, maintaining a 99% crash-free user sessions rate.",
-    skills: ["Android", "Google AdMob", "Firebase Crashlytics", "File System"]
+    date: "Oct 2024 – Nov 2025",
+    desc: "Implemented Figma designs into pixel-perfect Jetpack Compose UIs for school and college management apps, delivering responsive layouts across phones, tablets, and various screen densities. Applied Google Material Design guidelines and design tokens to build consistent UI components for student-facing features including timetables, attendance, and results. Implemented MVVM/MVI architecture with Dagger/Hilt across multiple educational apps, ensuring clean separation of UI state and business logic. Set up CI/CD pipelines using Docker and Jenkins with automated test gates, streamlining build and release processes for the team.",
+    skills: ["Kotlin", "Jetpack Compose", "MVVM", "MVI", "Dagger/Hilt", "Docker", "Jenkins", "Material Design"]
   },
   {
     role: "Research Intern",
     company: "Hochschule Zittau/Görlitz",
     location: "Zittau, Germany",
-    date: "June 2024 - Aug 2024",
-    desc: "Built voice-controlled wearable apps for RealWear Navigator 520 using Kotlin and Spring Boot. Optimized MySQL database schemas, achieving a 20% increase in AR data retrieval speeds. Developed a 3D prototype for a CAVE environment using Unity and spatial interaction logic.",
-    skills: ["Kotlin", "Spring Boot", "MySQL", "Unity", "RealWear"]
+    date: "Jun 2024 – Aug 2024",
+    desc: "Conducted heuristic evaluations and user research to enhance interaction design of wearable interfaces, documenting findings to improve spatial UX for departmental research use. Developed voice-controlled Android apps in Java and Kotlin for RealWear Navigator 520 wearable hardware, integrating REST APIs for real-time data retrieval. Prototyped a 3D CAVE environment in Unity for spatial AR/VR interaction research, applying multi-threaded rendering and structured concurrency patterns.",
+    skills: ["Kotlin", "Java", "Unity", "REST API", "RealWear", "AR/VR", "UX Research"]
+  },
+  {
+    role: "Teaching Assistant – Developing Mobile Applications",
+    company: "The British College",
+    location: "Kathmandu, Nepal",
+    date: "Feb 2024 – May 2024",
+    desc: "Worked under the mentorship and guidance of Miss Anita Gurung Rana, Assistant Programme Leader, supporting the delivery of the Developing Mobile Applications module. Facilitated weekly lab sessions on UI principles, design thinking, and heuristic evaluation for a cohort of undergraduate students. Guided students through Android app development using Jetpack Compose, providing design feedback aligned with Material Design and usability best practices. Supported students in applying human-centered design methods, from user research and wireframing through to high-fidelity prototyping and usability testing.",
+    skills: ["Jetpack Compose", "Material Design", "UX Design", "Design Thinking", "Teaching"]
   },
   {
     role: "Software Engineering Intern",
     company: "F1Soft International",
     location: "Kathmandu, Nepal",
-    date: "Sept 2022 - Feb 2023",
-    desc: "Implemented secure Biometric Authentication flows for financial transaction security. Integrated Google Maps API for location-based merchant discovery and transaction tracking.",
-    skills: ["Android", "Biometric Auth", "Google Maps API"]
+    date: "Sept 2022 – Feb 2023",
+    desc: "Implemented Google Material Design guidelines to faithfully translate Figma designs into production UI, ensuring visual consistency across components and interaction states. Built and maintained Android (Kotlin/Java) and iOS (Swift/SwiftUI) features using MVVM architecture, Retrofit for REST API integration, and Room for local persistence. Integrated biometric authentication (BiometricPrompt / LocalAuthentication) and Google Maps SDK across both Android and iOS platforms.",
+    skills: ["Kotlin", "Java", "Swift", "SwiftUI", "MVVM", "Retrofit", "Room", "Biometric Auth", "Google Maps"]
   }
 ];
 
 export const PROJECTS = [
   {
-    title: "Kastha - AR Furniture Platform",
-    description: "Developed an AR marketplace using ARCore. Built a secure Spring Boot backend with JWT-based Auth and RESTful APIs. Implemented real-time customer support chat functionality using Firebase. Automated AWS deployments via GitHub Actions.",
-    tags: ["ARCore", "Spring Boot", "AWS", "Firebase", "GitHub Actions", "JWT", "REST API"],
+    title: "ZhenKala – Authentic Himalayan Marketplace",
+    description: "Full-stack e-commerce platform built with React, Node.js, Express, and MongoDB, deployed on AWS EC2 with Docker and GitHub Actions CI/CD. Designed responsive UI components with a focus on interaction design and user flow. Built an analytics dashboard with real-time net-profit visualisation and dynamic cost-per-variant tracking, integrating Stripe and PayPal payment APIs.",
+    tags: ["React", "Node.js", "Express", "MongoDB", "AWS", "Docker", "GitHub Actions", "Stripe", "PayPal"],
+    link: "https://github.com/nsushant09/ZhenKala",
+    image: zhenkalaImage
+  },
+  {
+    title: "Kastha – AR Furniture Platform",
+    description: "Implemented ARCore-powered spatial product visualisation with responsive layouts and interaction design patterns, backed by a Spring Boot REST API and MySQL. Engineered a Firebase Realtime Database chat system enabling live interaction between store staff and customers. Built JWT-based authentication and authorization, image upload and retrieval, and automated deployments via Docker and GitHub Actions CI/CD.",
+    tags: ["ARCore", "Spring Boot", "MySQL", "Firebase", "JWT", "Docker", "GitHub Actions", "Kotlin"],
     link: "https://github.com/nsushant09/kastha",
     image: kasthaImage
   },
