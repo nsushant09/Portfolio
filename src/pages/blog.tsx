@@ -7,10 +7,10 @@ export const Blog = () => {
 
   return (
     <section className="py-24 px-6 max-w-6xl mx-auto">
-      <div className="text-center mb-16">
-        <h2 className="text-4xl font-bold mb-4">Blog</h2>
-        <p className="text-zinc-400">
-          Sharing insights and my  on DevOps, Software Engineering, AI, Cloud, and more.
+      <div className="text-center mb-24 mt-10">
+        <h2 className="font-heading text-6xl md:text-8xl font-black mb-6 text-white tracking-tighter">INSIGHTS</h2>
+        <p className="text-zinc-500 text-xl tracking-widest uppercase font-bold">
+          Sharing thoughts on DevOps, Engineering & AI
         </p>
       </div>
 

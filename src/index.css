@@ -1,5 +1,21 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Electrolize&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Grenze+Gotisch:wght@100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Electrolize", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Undefined Medium", ui-sans-serif, system-ui;
+}
+
+@font-face {
+  font-family: 'Undefined Medium';
+  src: url('./assets/fonts/undefined-medium/undefined-medium.woff2') format('woff2'),
+       url('./assets/fonts/undefined-medium/undefined-medium.woff') format('woff'),
+       url('./assets/fonts/undefined-medium/undefined-medium.ttf') format('truetype'),
+       url('./assets/fonts/undefined-medium/undefined-medium.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
 
 html {
     scroll-behavior: smooth;
@@ -9,6 +25,7 @@ html {
   body {
     background-color: #0a0a0a;
     color: white;
+    font-family: 'Electrolize', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

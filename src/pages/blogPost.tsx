@@ -40,9 +40,9 @@ export const BlogPost = () => {
             rehypePlugins={[rehypeHighlight]}
             components={{
               // Headers
-              h1: ({ ...props }) => <h1 className="text-5xl text-center font-bold mt-8 mb-16" {...props} />,
-              h2: ({ ...props }) => <h2 className="text-3xl font-bold mt-12 mb-6 border-b border-zinc-800 pb-2" {...props} />,
-              h3: ({ ...props }) => <h3 className="text-2xl font-semibold mt-8 mb-4 border-b border-zinc-800 pb-2" {...props} />,
+              h1: ({ ...props }) => <h1 className="font-heading text-6xl md:text-8xl text-center font-black mt-16 mb-20 tracking-tighter" {...props} />,
+              h2: ({ ...props }) => <h2 className="font-heading text-4xl md:text-5xl font-black mt-20 mb-8 tracking-tight text-white" {...props} />,
+              h3: ({ ...props }) => <h3 className="font-heading text-2xl md:text-3xl font-black mt-12 mb-6 tracking-tight text-zinc-200" {...props} />,
 
               // Text and Lists
               p: ({ ...props }) => <p className="leading-8 mb-6 text-zinc-300 text-justify" {...props} />,
@@ -55,7 +55,7 @@ export const BlogPost = () => {
                 <span className="flex flex-col items-center my-8">
                   <img
                     {...props}
-                    className="rounded-xl border border-zinc-900 max-w-full md:max-w-[85%] h-auto"
+                    className="rounded-sm border border-zinc-800 max-w-full md:max-w-[85%] h-auto shadow-2xl"
                     alt={props.alt || "Blog Image"}
                   />
                   {props.alt && (
@@ -78,7 +78,7 @@ export const BlogPost = () => {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               code: ({ className, children, ...props }: any) => {
                 return (
-                  <code className={`${className} rounded-lg px-2 py-2`} {...props}>
+                  <code className={`${className} rounded-sm px-2 py-2`} {...props}>
                     {children}
                   </code>
                 );
