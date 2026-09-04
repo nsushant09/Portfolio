@@ -213,7 +213,7 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
               </div>
 
               <pre className="text-[var(--accent)] text-[10px] sm:text-xs font-bold leading-tight select-none py-1">
-{`   _____ _    _  _____ _    _          _   _ _______ 
+                {`   _____ _    _  _____ _    _          _   _ _______ 
   / ____| |  | |/ ____| |  | |   /\\   | \\ | |__   __|
  | (___ | |  | | (___ | |__| |  /  \\  |  \\| |  | |   
   \\___ \\| |  | |\\___ \\|  __  | / /\\ \\ | . \` |  | |   
@@ -842,7 +842,7 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
     >
       {/* FULL-SCREEN TERMINAL FRAME */}
       <div className="w-full h-full flex flex-col bg-[var(--card-bg)] overflow-hidden">
-        
+
         {/* Window Top Titlebar */}
         <header className="px-4 py-2.5 bg-[var(--term-header)] border-b border-[var(--border)] flex items-center justify-between select-none flex-shrink-0">
           {/* Left Traffic Lights */}
@@ -877,7 +877,7 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
           <div className="flex items-center gap-1.5 text-xs text-[var(--muted)] font-bold truncate px-2">
             <TerminalIcon size={14} className="text-[var(--accent)]" />
             <span className="text-[var(--fg)] font-semibold">visitor@nsushant.com.np:</span>
-            <span>~ (zsh — full viewport)</span>
+            <span>~ (zsh)</span>
           </div>
 
           {/* Right Action Controls */}
@@ -903,9 +903,8 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
                 setIsSound(next);
               }}
               title={isSound ? 'Mute Mechanical Sounds' : 'Enable Mechanical Sounds'}
-              className={`p-1.5 rounded hover:bg-[var(--highlight)] border border-transparent hover:border-[var(--border)] transition-all cursor-pointer ${
-                isSound ? 'text-[var(--accent-2)]' : 'text-[var(--muted)]'
-              }`}
+              className={`p-1.5 rounded hover:bg-[var(--highlight)] border border-transparent hover:border-[var(--border)] transition-all cursor-pointer ${isSound ? 'text-[var(--accent-2)]' : 'text-[var(--muted)]'
+                }`}
             >
               {isSound ? <Volume2 size={15} /> : <VolumeX size={15} />}
             </button>
@@ -917,9 +916,8 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
                 setIsCrt(c => !c);
               }}
               title="Toggle Retro CRT Scanlines"
-              className={`p-1.5 rounded hover:bg-[var(--highlight)] border border-transparent hover:border-[var(--border)] transition-all cursor-pointer ${
-                isCrt ? 'text-[var(--accent)] bg-[var(--highlight)]' : 'text-[var(--muted)]'
-              }`}
+              className={`p-1.5 rounded hover:bg-[var(--highlight)] border border-transparent hover:border-[var(--border)] transition-all cursor-pointer ${isCrt ? 'text-[var(--accent)] bg-[var(--highlight)]' : 'text-[var(--muted)]'
+                }`}
             >
               <Tv size={15} />
             </button>
