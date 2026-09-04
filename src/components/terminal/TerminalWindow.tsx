@@ -14,6 +14,7 @@ import {
   playEnterSound,
   playErrorSound,
   playSuccessSound,
+  playBeep,
   toggleSound,
   getSoundEnabled
 } from '../../utils/audio';
@@ -31,7 +32,6 @@ import { SnakeGame } from './SnakeGame';
 import { Game2048 } from './Game2048';
 import { PongGame } from './PongGame';
 import { TypingTest } from './TypingTest';
-import { GuessGame } from './GuessGame';
 import { GamesMenuOutput } from './GamesMenuOutput';
 import { CommandPalette } from './CommandPalette';
 import { PROFILE } from '../../constants/data';
@@ -52,7 +52,8 @@ import {
   AlertCircle,
   Loader2,
   ExternalLink,
-  Gamepad2
+  Gamepad2,
+  Target
 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
@@ -72,6 +73,13 @@ interface ContactWizardState {
     subject: string;
     message: string;
   };
+}
+
+interface GuessGameState {
+  active: boolean;
+  target: number;
+  attempts: number;
+  guesses: { num: number; hint: 'higher' | 'lower' | 'correct' }[];
 }
 
 interface TerminalWindowProps {
@@ -106,6 +114,14 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
     data: { name: '', email: '', subject: '', message: '' }
   });
   const [isTransmitting, setIsTransmitting] = useState(false);
+
+  // Interactive CLI Guess Game state
+  const [guessGame, setGuessGame] = useState<GuessGameState>({
+    active: false,
+    target: 0,
+    attempts: 0,
+    guesses: []
+  });
 
   // Settings states
   const [currentTheme, setCurrentTheme] = useState<ThemeName>(() => {
@@ -149,7 +165,7 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
     }
-  }, [entries, tabMatches, contactWizard]);
+  }, [entries, tabMatches, contactWizard, guessGame]);
 
   const appendHistory = (cmd: string) => {
     if (!cmd.trim()) return;
@@ -161,9 +177,9 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
     setHistoryIndex(-1);
   };
 
-  // Autocomplete computation (disabled during contact wizard)
+  // Autocomplete computation (disabled during contact wizard and guess game)
   useEffect(() => {
-    if (contactWizard.active || !inputVal) {
+    if (contactWizard.active || guessGame.active || !inputVal) {
       setGhostSuggestion('');
       setTabMatches([]);
       return;
@@ -175,7 +191,7 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
     } else {
       setTabMatches([]);
     }
-  }, [inputVal, contactWizard.active]);
+  }, [inputVal, contactWizard.active, guessGame.active]);
 
   // Initial Real CLI Login Session
   useEffect(() => {
@@ -431,6 +447,147 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
     }
   };
 
+  // Handle CLI Guess Game Submissions
+  const handleGuessSubmit = (value: string) => {
+    const val = value.trim();
+    playEnterSound();
+
+    if (!val) return;
+
+    if (['cancel', 'exit', 'quit', 'abort', 'q'].includes(val.toLowerCase())) {
+      setEntries(prev => [
+        ...prev,
+        {
+          id: String(Date.now()),
+          command: val,
+          timestamp: new Date().toLocaleTimeString(),
+          output: (
+            <div className="text-xs text-[var(--warning)] font-mono">
+              ✖ Number guess game exited. The secret number was <strong>{guessGame.target}</strong>.
+            </div>
+          )
+        }
+      ]);
+      setGuessGame({ active: false, target: 0, attempts: 0, guesses: [] });
+      setInputVal('');
+      return;
+    }
+
+    if (val.toLowerCase() === 'clear' || val.toLowerCase() === 'cls') {
+      setEntries([]);
+      setGuessGame({ active: false, target: 0, attempts: 0, guesses: [] });
+      setInputVal('');
+      return;
+    }
+
+    const num = parseInt(val, 10);
+    if (isNaN(num) || num < 1 || num > 100) {
+      playErrorSound();
+      setEntries(prev => [
+        ...prev,
+        {
+          id: String(Date.now()),
+          command: val,
+          timestamp: new Date().toLocaleTimeString(),
+          output: (
+            <div className="text-xs text-[var(--error)] flex items-center gap-1.5 font-mono">
+              <AlertCircle size={13} />
+              <span>Please enter a valid whole number between <strong>1</strong> and <strong>100</strong> (or type <code className="text-[var(--fg)]">exit</code> to quit).</span>
+            </div>
+          )
+        }
+      ]);
+      setInputVal('');
+      return;
+    }
+
+    const nextAttempts = guessGame.attempts + 1;
+
+    if (num === guessGame.target) {
+      playSuccessSound();
+      setEntries(prev => [
+        ...prev,
+        {
+          id: String(Date.now()),
+          command: String(num),
+          timestamp: new Date().toLocaleTimeString(),
+          output: (
+            <div className="my-2 p-3 border border-[var(--accent-2)] bg-[var(--accent-2)]/10 text-[var(--accent-2)] rounded text-xs space-y-1.5 font-mono">
+              <div className="font-bold flex items-center gap-1.5 text-sm">
+                🎯 BINGO! You found the secret number ({guessGame.target})!
+              </div>
+              <div className="text-xs text-[var(--fg)] opacity-90">
+                Solved in <strong>{nextAttempts}</strong> {nextAttempts === 1 ? 'attempt' : 'attempts'}.
+              </div>
+              <div className="text-[11px] text-[var(--muted)] pt-1">
+                Type <span className="text-[var(--accent)] font-bold">guess</span> to play again or <span className="text-[var(--accent-2)] font-bold">games</span> for the arcade menu.
+              </div>
+            </div>
+          )
+        }
+      ]);
+      setGuessGame({ active: false, target: 0, attempts: 0, guesses: [] });
+    } else if (num < guessGame.target) {
+      playBeep(400, 0.04, 'sine');
+      setEntries(prev => [
+        ...prev,
+        {
+          id: String(Date.now()),
+          command: String(num),
+          timestamp: new Date().toLocaleTimeString(),
+          output: (
+            <div className="flex items-center gap-2 text-xs py-0.5 font-mono">
+              <span className="px-1.5 py-0.5 rounded bg-[var(--warning)]/15 text-[var(--warning)] font-bold text-[11px] flex items-center gap-1">
+                ▲ GO HIGHER
+              </span>
+              <span className="text-[var(--fg)]">
+                The secret number is <strong>greater</strong> than <span className="text-[var(--accent)] font-bold">{num}</span>.
+              </span>
+              <span className="text-[var(--muted)] text-[11px] ml-auto">
+                Attempt #{nextAttempts}
+              </span>
+            </div>
+          )
+        }
+      ]);
+      setGuessGame(prev => ({
+        ...prev,
+        attempts: nextAttempts,
+        guesses: [...prev.guesses, { num, hint: 'higher' }]
+      }));
+    } else {
+      playBeep(300, 0.04, 'sine');
+      setEntries(prev => [
+        ...prev,
+        {
+          id: String(Date.now()),
+          command: String(num),
+          timestamp: new Date().toLocaleTimeString(),
+          output: (
+            <div className="flex items-center gap-2 text-xs py-0.5 font-mono">
+              <span className="px-1.5 py-0.5 rounded bg-[var(--accent)]/15 text-[var(--accent)] font-bold text-[11px] flex items-center gap-1">
+                ▼ GO LOWER
+              </span>
+              <span className="text-[var(--fg)]">
+                The secret number is <strong>smaller</strong> than <span className="text-[var(--accent)] font-bold">{num}</span>.
+              </span>
+              <span className="text-[var(--muted)] text-[11px] ml-auto">
+                Attempt #{nextAttempts}
+              </span>
+            </div>
+          )
+        }
+      ]);
+      setGuessGame(prev => ({
+        ...prev,
+        attempts: nextAttempts,
+        guesses: [...prev.guesses, { num, hint: 'lower' }]
+      }));
+    }
+
+    setInputVal('');
+  };
+
   // Handle Command Execution
   const executeCommand = (rawCommand: string, isFromUrl = false) => {
     const trimmed = rawCommand.trim();
@@ -624,7 +781,23 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
     } else if (['typing', 'speedtest'].includes(cmdName) || trimmed.toLowerCase() === 'play typing') {
       outputContent = <TypingTest onExit={() => executeCommand('clear')} />;
     } else if (cmdName === 'guess' || trimmed.toLowerCase() === 'play guess') {
-      outputContent = <GuessGame onExit={() => executeCommand('clear')} />;
+      const targetNum = Math.floor(Math.random() * 100) + 1;
+      setGuessGame({
+        active: true,
+        target: targetNum,
+        attempts: 0,
+        guesses: []
+      });
+      outputContent = (
+        <div className="my-2 text-xs font-mono space-y-1.5 select-text">
+          <div className="font-bold text-[var(--accent)] flex items-center gap-1.5">
+            <Target size={14} /> NUMBER GUESS CHALLENGE (1-100)
+          </div>
+          <p className="text-[var(--fg)] opacity-90 pl-2">
+            The terminal has picked a secret number between <strong>1</strong> and <strong>100</strong>. Enter your guess in the CLI prompt below (or type <code className="text-[var(--error)]">exit</code> to quit).
+          </p>
+        </div>
+      );
     } else if (cmdName === 'theme') {
       const targetTheme = args[0]?.toLowerCase();
       if (!targetTheme || targetTheme === 'toggle') {
@@ -727,6 +900,14 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
       return;
     }
 
+    if (guessGame.active) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleGuessSubmit(inputVal);
+      }
+      return;
+    }
+
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
       setIsPaletteOpen(true);
@@ -806,6 +987,10 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
 
   // Dynamic Prompt Label
   const getPromptLabel = () => {
+    if (guessGame.active) {
+      return <span className="text-[var(--accent)] font-bold select-none">? Guess a number (1-100):</span>;
+    }
+
     if (!contactWizard.active) {
       return (
         <div className="flex items-center gap-1.5 flex-shrink-0 select-none">
@@ -1031,13 +1216,15 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
                 placeholder={
                   contactWizard.active
                     ? contactWizard.step === 'confirm' ? 'Y / n' : 'Type here and press Enter...'
-                    : "Type a command (e.g. 'help', 'open linkedin', 'games', '2048', 'blog')..."
+                    : guessGame.active
+                      ? "Enter a number between 1 and 100 (or 'exit')..."
+                      : "Type a command (e.g. 'help', 'open linkedin', 'games', '2048', 'blog')..."
                 }
                 className="w-full bg-transparent text-[var(--fg)] focus:outline-none font-mono text-xs sm:text-sm z-10 placeholder-[var(--muted)]/40"
               />
 
               {/* Ghost Autocomplete Overlay */}
-              {!contactWizard.active && ghostSuggestion && (
+              {!contactWizard.active && !guessGame.active && ghostSuggestion && (
                 <div className="absolute left-0 top-0 pointer-events-none text-xs sm:text-sm font-mono flex items-center z-0">
                   <span className="invisible">{inputVal}</span>
                   <span className="text-[var(--muted)] opacity-60">{ghostSuggestion}</span>
@@ -1052,6 +1239,7 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
             <button
               onClick={() => {
                 if (contactWizard.active) handleContactStepSubmit(inputVal);
+                else if (guessGame.active) handleGuessSubmit(inputVal);
                 else executeCommand(inputVal);
               }}
               title="Submit"
