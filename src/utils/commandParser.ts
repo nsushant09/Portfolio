@@ -13,6 +13,17 @@ export interface CommandDef {
 export const THEMES = ['dark', 'light', 'matrix', 'dracula', 'nord', 'solarized'] as const;
 export type ThemeName = typeof THEMES[number];
 
+export const FONT_SIZES = ['sm', 'default', 'lg', 'xl', '2xl'] as const;
+export type FontSizeName = typeof FONT_SIZES[number];
+
+export const FONT_SIZE_INFO: Record<FontSizeName, { label: string; px: number; scale: string; desc: string }> = {
+  sm: { label: 'Small', px: 13, scale: '85%', desc: 'Compact (13px / 85%)' },
+  default: { label: 'Default', px: 15, scale: '100%', desc: 'Standard (15px / 100%)' },
+  lg: { label: 'Large', px: 17, scale: '115%', desc: 'Comfortable (17px / 115%)' },
+  xl: { label: 'Extra Large', px: 19, scale: '130%', desc: 'Spacious (19px / 130%)' },
+  '2xl': { label: 'Huge', px: 22, scale: '150%', desc: 'Maximum (22px / 150%)' }
+};
+
 export const COMMANDS: CommandDef[] = [
   {
     name: 'help',
@@ -165,6 +176,14 @@ export const COMMANDS: CommandDef[] = [
     category: 'System',
     usage: 'theme <dark|light|matrix|dracula|nord|solarized|toggle|crt [on|off]>',
     manual: 'THEME - Changes the terminal color palette. Available palettes: dark, light, matrix, dracula, nord, solarized. Also toggles CRT scanlines.'
+  },
+  {
+    name: 'fontsize',
+    aliases: ['font-size', 'font', 'zoom', 'size', 'text-size'],
+    description: 'Adjust or increase terminal font size (sm, default, lg, xl, 2xl, +, -, reset)',
+    category: 'System',
+    usage: 'fontsize <sm|default|lg|xl|2xl|+|-|reset>',
+    manual: 'FONTSIZE - Adjusts terminal typography size across the entire session. Supported values: sm (13px), default (15px), lg (17px), xl (19px), 2xl (22px), or relative (+ / - / reset).'
   },
   {
     name: 'sound',
@@ -321,6 +340,7 @@ export function matchIntent(input: string): string | null {
     return 'games';
   }
   if (/(theme|color|dark|light|matrix|style)/.test(text)) return 'theme';
+  if (/(font.*size|fontsize|zoom|text.*size|bigger.*text|larger.*text|smaller.*text|increase.*font|decrease.*font)/.test(text)) return 'fontsize';
   if (/(clear|cls|wipe)/.test(text)) return 'clear';
   if (/(help|what can i do|commands|options|how to use)/.test(text)) return 'help';
 
@@ -379,6 +399,15 @@ export function getAutocomplete(rawInput: string): AutocompleteResult {
     if (cmdName === 'theme') {
       const candidates = [...THEMES, 'crt', 'toggle'];
       const matches = candidates.filter(t => t.startsWith(argPrefix));
+      return {
+        suggestion: matches.length === 1 ? matches[0].slice(argPrefix.length) : '',
+        matches
+      };
+    }
+
+    if (['fontsize', 'font-size', 'font', 'zoom', 'size', 'text-size'].includes(cmdName)) {
+      const opts = ['sm', 'default', 'lg', 'xl', '2xl', '+', '-', 'increase', 'decrease', 'reset'];
+      const matches = opts.filter(o => o.startsWith(argPrefix));
       return {
         suggestion: matches.length === 1 ? matches[0].slice(argPrefix.length) : '',
         matches

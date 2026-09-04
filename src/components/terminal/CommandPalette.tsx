@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { COMMANDS, THEMES } from '../../utils/commandParser';
+import { COMMANDS, THEMES, FONT_SIZES, FONT_SIZE_INFO } from '../../utils/commandParser';
 import { PROJECTS } from '../../constants/data';
 import { BLOGS } from '../../constants/blogData';
-import { Search, Terminal, FolderGit2, BookOpen, Palette, X, CornerDownLeft } from 'lucide-react';
+import { Search, Terminal, FolderGit2, BookOpen, Palette, Type, ZoomIn, ZoomOut, X, CornerDownLeft } from 'lucide-react';
 import { playEnterSound } from '../../utils/audio';
 
 interface CommandPaletteProps {
@@ -16,7 +16,7 @@ interface PaletteItem {
   title: string;
   description: string;
   command: string;
-  category: 'Commands' | 'Projects' | 'Articles' | 'Themes';
+  category: 'Commands' | 'Projects' | 'Articles' | 'Themes' | 'Typography';
   icon: React.ReactNode;
 }
 
@@ -36,6 +36,30 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose,
       command: c.name,
       category: 'Commands' as const,
       icon: <Terminal size={14} className="text-[var(--accent)]" />
+    })),
+    {
+      id: 'font-increase',
+      title: 'Font Size: Increase (+)',
+      description: 'Make terminal text larger (Cmd/Ctrl +)',
+      command: 'fontsize +',
+      category: 'Typography' as const,
+      icon: <ZoomIn size={14} className="text-[var(--accent)]" />
+    },
+    {
+      id: 'font-decrease',
+      title: 'Font Size: Decrease (-)',
+      description: 'Make terminal text smaller (Cmd/Ctrl -)',
+      command: 'fontsize -',
+      category: 'Typography' as const,
+      icon: <ZoomOut size={14} className="text-[var(--accent)]" />
+    },
+    ...FONT_SIZES.map(s => ({
+      id: `font-size-${s}`,
+      title: `Font Size: ${FONT_SIZE_INFO[s].label} (${FONT_SIZE_INFO[s].px}px)`,
+      description: `Set terminal text size to ${FONT_SIZE_INFO[s].desc}`,
+      command: `fontsize ${s}`,
+      category: 'Typography' as const,
+      icon: <Type size={14} className="text-[var(--accent-2)]" />
     })),
     ...PROJECTS.map(p => ({
       id: `proj-${p.title}`,

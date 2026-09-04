@@ -3,11 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   COMMANDS,
   THEMES,
+  FONT_SIZES,
+  FONT_SIZE_INFO,
   getAutocomplete,
   findClosestCommand,
   matchIntent
 } from '../../utils/commandParser';
-import type { ThemeName } from '../../utils/commandParser';
+import type { ThemeName, FontSizeName } from '../../utils/commandParser';
 import {
   initAudio,
   playKeySound,
@@ -53,7 +55,8 @@ import {
   Loader2,
   ExternalLink,
   Gamepad2,
-  Target
+  Target,
+  Type
 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
@@ -128,6 +131,10 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
     const stored = localStorage.getItem('term_theme') as ThemeName;
     return THEMES.includes(stored) ? stored : 'dark';
   });
+  const [fontSize, setFontSize] = useState<FontSizeName>(() => {
+    const stored = localStorage.getItem('term_font_size') as FontSizeName;
+    return FONT_SIZES.includes(stored) ? stored : 'default';
+  });
   const [isCrt, setIsCrt] = useState<boolean>(() => {
     return localStorage.getItem('term_crt_enabled') === 'true';
   });
@@ -147,6 +154,14 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
     document.documentElement.setAttribute('data-theme', currentTheme);
     localStorage.setItem('term_theme', currentTheme);
   }, [currentTheme]);
+
+  // Apply Font Size
+  useEffect(() => {
+    const sizeInfo = FONT_SIZE_INFO[fontSize] || FONT_SIZE_INFO.default;
+    document.documentElement.style.fontSize = `${sizeInfo.px}px`;
+    document.documentElement.setAttribute('data-font-size', fontSize);
+    localStorage.setItem('term_font_size', fontSize);
+  }, [fontSize]);
 
   useEffect(() => {
     if (isCrt) {
@@ -798,6 +813,107 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
           </p>
         </div>
       );
+    } else if (['fontsize', 'font-size', 'font', 'zoom', 'size', 'text-size'].includes(cmdName)) {
+      const targetArg = args[0]?.toLowerCase();
+      const currentIdx = FONT_SIZES.indexOf(fontSize);
+
+      if (!targetArg || targetArg === 'show' || targetArg === 'status') {
+        outputContent = (
+          <div className="my-1.5 space-y-1.5 text-xs font-mono select-text">
+            <div className="font-bold text-[var(--accent)] flex items-center gap-1.5">
+              <Type size={14} /> TERMINAL FONT SIZE SETTINGS
+            </div>
+            <div className="text-[var(--fg)] opacity-90 pl-2">
+              Current size: <strong className="text-[var(--accent-2)]">{FONT_SIZE_INFO[fontSize].label} ({FONT_SIZE_INFO[fontSize].px}px / {FONT_SIZE_INFO[fontSize].scale})</strong>
+            </div>
+            <div className="text-[11px] text-[var(--muted)] pl-2 space-y-0.5">
+              <div>Available presets: <span className="text-[var(--fg)]">sm</span> (13px), <span className="text-[var(--fg)]">default</span> (15px), <span className="text-[var(--fg)]">lg</span> (17px), <span className="text-[var(--fg)]">xl</span> (19px), <span className="text-[var(--fg)]">2xl</span> (22px)</div>
+              <div>Quick shortcuts: <code className="text-[var(--accent)]">fontsize +</code> (increase) • <code className="text-[var(--accent)]">fontsize -</code> (decrease) • <code className="text-[var(--accent)]">fontsize reset</code> (default)</div>
+              <div>Or use keyboard: <kbd className="px-1 bg-black/40 border border-[var(--border)] rounded">⌘/Ctrl +</kbd> / <kbd className="px-1 bg-black/40 border border-[var(--border)] rounded">⌘/Ctrl -</kbd> / <kbd className="px-1 bg-black/40 border border-[var(--border)] rounded">⌘/Ctrl 0</kbd></div>
+            </div>
+          </div>
+        );
+      } else if (['+', 'increase', 'larger', 'bigger', 'more', 'in', 'up'].includes(targetArg)) {
+        if (currentIdx < FONT_SIZES.length - 1) {
+          const next = FONT_SIZES[currentIdx + 1];
+          setFontSize(next);
+          outputContent = (
+            <div className="text-xs text-[var(--accent-2)] font-mono flex items-center gap-1.5">
+              <Type size={13} />
+              <span>✓ Terminal font size increased to <strong>{FONT_SIZE_INFO[next].label}</strong> ({FONT_SIZE_INFO[next].px}px / {FONT_SIZE_INFO[next].scale}).</span>
+            </div>
+          );
+        } else {
+          outputContent = (
+            <div className="text-xs text-[var(--warning)] font-mono">
+              ⚠️ Terminal font size is already at maximum (<strong>{FONT_SIZE_INFO[fontSize].label} - {FONT_SIZE_INFO[fontSize].px}px</strong>).
+            </div>
+          );
+        }
+      } else if (['-', 'decrease', 'smaller', 'less', 'out', 'down'].includes(targetArg)) {
+        if (currentIdx > 0) {
+          const next = FONT_SIZES[currentIdx - 1];
+          setFontSize(next);
+          outputContent = (
+            <div className="text-xs text-[var(--accent-2)] font-mono flex items-center gap-1.5">
+              <Type size={13} />
+              <span>✓ Terminal font size decreased to <strong>{FONT_SIZE_INFO[next].label}</strong> ({FONT_SIZE_INFO[next].px}px / {FONT_SIZE_INFO[next].scale}).</span>
+            </div>
+          );
+        } else {
+          outputContent = (
+            <div className="text-xs text-[var(--warning)] font-mono">
+              ⚠️ Terminal font size is already at minimum (<strong>{FONT_SIZE_INFO[fontSize].label} - {FONT_SIZE_INFO[fontSize].px}px</strong>).
+            </div>
+          );
+        }
+      } else if (['reset', 'normal', 'md', 'medium'].includes(targetArg) || targetArg === '15') {
+        setFontSize('default');
+        outputContent = (
+          <div className="text-xs text-[var(--accent-2)] font-mono flex items-center gap-1.5">
+            <Type size={13} />
+            <span>✓ Terminal font size reset to <strong>Default</strong> (15px / 100%).</span>
+          </div>
+        );
+      } else if (['sm', 'small', '13'].includes(targetArg)) {
+        setFontSize('sm');
+        outputContent = (
+          <div className="text-xs text-[var(--accent-2)] font-mono flex items-center gap-1.5">
+            <Type size={13} />
+            <span>✓ Terminal font size set to <strong>Small</strong> (13px / 85%).</span>
+          </div>
+        );
+      } else if (['lg', 'large', '17'].includes(targetArg)) {
+        setFontSize('lg');
+        outputContent = (
+          <div className="text-xs text-[var(--accent-2)] font-mono flex items-center gap-1.5">
+            <Type size={13} />
+            <span>✓ Terminal font size set to <strong>Large</strong> (17px / 115%).</span>
+          </div>
+        );
+      } else if (['xl', 'xlarge', 'extra-large', '19'].includes(targetArg)) {
+        setFontSize('xl');
+        outputContent = (
+          <div className="text-xs text-[var(--accent-2)] font-mono flex items-center gap-1.5">
+            <Type size={13} />
+            <span>✓ Terminal font size set to <strong>Extra Large</strong> (19px / 130%).</span>
+          </div>
+        );
+      } else if (['2xl', 'huge', 'max', '22'].includes(targetArg)) {
+        setFontSize('2xl');
+        outputContent = (
+          <div className="text-xs text-[var(--accent-2)] font-mono flex items-center gap-1.5">
+            <Type size={13} />
+            <span>✓ Terminal font size set to <strong>Huge</strong> (22px / 150%).</span>
+          </div>
+        );
+      } else {
+        outputContent = (
+          <div className="text-xs text-[var(--error)] font-mono">
+            Unknown font size &quot;{targetArg}&quot;. Options: sm, default, lg, xl, 2xl, +, -, reset.
+          </div>
+        );
+      }
     } else if (cmdName === 'theme') {
       const targetTheme = args[0]?.toLowerCase();
       if (!targetTheme || targetTheme === 'toggle') {
@@ -908,6 +1024,28 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
       return;
     }
 
+    if ((e.metaKey || e.ctrlKey) && (e.key === '=' || e.key === '+')) {
+      e.preventDefault();
+      const currentIdx = FONT_SIZES.indexOf(fontSize);
+      const nextIdx = Math.min(FONT_SIZES.length - 1, currentIdx + 1);
+      setFontSize(FONT_SIZES[nextIdx]);
+      return;
+    }
+
+    if ((e.metaKey || e.ctrlKey) && (e.key === '-' || e.key === '_')) {
+      e.preventDefault();
+      const currentIdx = FONT_SIZES.indexOf(fontSize);
+      const nextIdx = Math.max(0, currentIdx - 1);
+      setFontSize(FONT_SIZES[nextIdx]);
+      return;
+    }
+
+    if ((e.metaKey || e.ctrlKey) && e.key === '0') {
+      e.preventDefault();
+      setFontSize('default');
+      return;
+    }
+
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
       setIsPaletteOpen(true);
@@ -978,6 +1116,7 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
     { label: 'skills', cmd: 'skills' },
     { label: 'blog', cmd: 'blog' },
     { label: 'contact', cmd: 'contact' },
+    { label: 'fontsize', cmd: 'fontsize +' },
     { label: 'linkedin', cmd: 'open linkedin' },
     { label: 'github', cmd: 'open github' },
     { label: 'games', cmd: 'games' },
@@ -1078,6 +1217,20 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
             >
               <Search size={13} />
               <span className="hidden sm:inline font-mono">⌘K</span>
+            </button>
+
+            {/* Font Size Step Control */}
+            <button
+              onClick={e => {
+                e.stopPropagation();
+                const nextIdx = (FONT_SIZES.indexOf(fontSize) + 1) % FONT_SIZES.length;
+                setFontSize(FONT_SIZES[nextIdx]);
+              }}
+              title={`Terminal Font Size: ${FONT_SIZE_INFO[fontSize].label} (${FONT_SIZE_INFO[fontSize].px}px) - Click to cycle or run 'fontsize +'`}
+              className="px-2 py-1 rounded bg-[var(--highlight)] text-[var(--muted)] hover:text-[var(--accent)] border border-[var(--border)] transition-all flex items-center gap-1 text-[11px] cursor-pointer"
+            >
+              <Type size={13} />
+              <span className="hidden sm:inline font-mono text-[10px] font-bold">{FONT_SIZE_INFO[fontSize].label}</span>
             </button>
 
             {/* Sound Toggle */}
@@ -1301,6 +1454,7 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onSwitchToGui })
             </div>
 
             <div className="flex items-center gap-3 text-[11px]">
+              <span className="hidden md:inline">Font: <button onClick={() => executeCommand('fontsize +')} className="text-[var(--accent)] font-bold hover:underline cursor-pointer">{FONT_SIZE_INFO[fontSize].label}</button></span>
               <span className="hidden sm:inline">Theme: <strong className="text-[var(--accent)]">{currentTheme}</strong></span>
               <span>Press <kbd className="px-1 bg-black/40 border border-[var(--border)] rounded text-[var(--fg)]">⌘K</kbd> for palette</span>
             </div>
