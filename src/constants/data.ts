@@ -13,24 +13,24 @@ export const PROFILE = {
   role: "Software Engineer",
   email: "nsushant09@gmail.com",
   phone: "+61 470606448",
-  location: "Melbourne, Australia",
+  location: "Melbourne, VIC, Australia",
   experienceYears: "2+",
-  education: "Master of Information Technology",
+  education: "Master of Information Technology (Specialization in Artificial Intelligence)",
 };
 
 export const EDUCATION = [
   {
     institution: "La Trobe University",
-    location: "Melbourne, Australia",
-    degree: "Master of Information Technology (Specialising in Artificial Intelligence)",
-    date: "2025 – Jul 2027",
+    location: "Melbourne, VIC, Australia",
+    degree: "Master of Information Technology (Specialization in Artificial Intelligence)",
+    date: "Nov 2025 – June 2027",
     description: ""
   },
   {
-    institution: "The British College",
+    institution: "The British College (Degree awarded by Leeds Beckett University, UK)",
     location: "Kathmandu, Nepal",
-    degree: "BSc (Hons) Computing — First Class Honours",
-    date: "2021 – 2024",
+    degree: "BSc (Hons) Computing",
+    date: "Feb 2021 – Sept 2024",
     description: ""
   }
 ];
@@ -39,52 +39,99 @@ export const SKILLS_CATEGORIES = [
   {
     title: "Languages & Libraries",
     icon: Code2,
-    skills: ["Kotlin", "Java", "Swift", "JavaScript", "TypeScript", "React", "Spring Boot", "Jetpack Compose", "Kotlin Multiplatform", "PHP", "ARCore", "Firebase", "Supabase", "Scikit-learn", "TensorFlow"]
+    skills: ["Kotlin", "Java", "Swift", "C#", "JavaScript", "TypeScript", "React", "Spring Boot", "Jetpack Compose", "Kotlin Multiplatform (KMP)", "Android Jetpack", "Coroutines", "Firebase", "SQL", "Unity"]
   },
   {
     title: "Tools & Platforms",
     icon: Settings,
-    skills: ["Android SDK", "iOS Development", "AWS", "Docker", "Kubernetes", "GitHub Actions", "Git", "Gradle", "Jenkins", "Nginx"]
+    skills: ["Android SDK", "iOS Development", "AWS (EC2, RDS, Route53)", "Docker", "GitHub Actions", "Git", "Gradle", "Jenkins", "Dagger/Hilt", "JUnit", "Espresso", "HTC VIVE"]
   },
   {
-    title: "Soft Skills",
+    title: "Methods & Soft Skills",
     icon: Users,
-    skills: ["Agile/Scrum", "Team Leadership", "Technical Writing", "Problem Solving", "Cross-functional Collaboration"]
+    skills: ["UI/UX Engineering", "Design Thinking", "Figma Wireframing", "User Research", "Heuristic Usability Testing", "Clean Architecture", "MVVM", "Agile/Scrum"]
   }
 ];
 
-export const EXPERIENCE = [
+export interface ExperienceItem {
+  role: string;
+  company: string;
+  location: string;
+  date: string;
+  category: "Work Experience" | "Research Experience";
+  desc: string;
+  bullets: string[];
+  skills: string[];
+}
+
+export const EXPERIENCE: ExperienceItem[] = [
   {
-    role: "Junior Software Engineer",
+    role: "Academic Tutor (CSE2UI: User Interface Design)",
+    company: "La Trobe University",
+    location: "Melbourne, VIC, Australia",
+    date: "June 2026 – Present",
+    category: "Work Experience",
+    desc: "Leading practical workshops and interactive lab sessions on UI/UX engineering, design thinking, user research synthesis, and rapid prototyping for 120+ undergraduate students.",
+    bullets: [
+      "Led practical workshops and interactive lab sessions on UI/UX engineering, design thinking, user research synthesis, and rapid prototyping for 120+ undergraduate students.",
+      "Guided students through Figma wireframing, interactive prototyping, and heuristic usability testing to identify usability bottlenecks and validate design decisions prior to code execution."
+    ],
+    skills: ["UI/UX Engineering", "Design Thinking", "Figma", "User Research", "Rapid Prototyping", "Heuristic Evaluation"]
+  },
+  {
+    role: "Graduate Research Assistant",
+    company: "La Trobe University (Advisor: Dr. Huawei Tu)",
+    location: "Melbourne, VIC, Australia",
+    date: "March 2026 – Present",
+    category: "Research Experience",
+    desc: "Developing a novel Walk-in-Place (WIP) VR locomotion framework in Unity utilizing HTC VIVE headsets and Ultimate Trackers.",
+    bullets: [
+      "Developed a novel Walk-in-Place (WIP) VR locomotion framework in Unity utilizing HTC VIVE headsets and Ultimate Trackers.",
+      "Designed real-time WIP algorithms combining eye-gaze tracking and body kinematics, computing user velocity proportional to focal distance, leg cadence, and arm swing to mitigate cybersickness."
+    ],
+    skills: ["VR Locomotion", "Unity", "HTC VIVE", "Ultimate Trackers", "Eye-Gaze Tracking", "Body Kinematics", "C#"]
+  },
+  {
+    role: "Software Engineer",
     company: "I.T. Security College of Computer Studies",
     location: "Kathmandu, Nepal",
     date: "Oct 2024 – Nov 2025",
-    desc: "Implemented Figma designs into pixel-perfect Jetpack Compose UIs for school and college management apps, delivering responsive layouts across phones, tablets, and various screen densities. Applied Google Material Design guidelines and design tokens to build consistent UI components for student-facing features including timetables, attendance, and results. Implemented MVVM/MVI architecture with Dagger/Hilt across multiple educational apps, ensuring clean separation of UI state and business logic. Set up CI/CD pipelines using Docker and Jenkins with automated test gates, streamlining build and release processes for the team.",
-    skills: ["Kotlin", "Jetpack Compose", "MVVM", "MVI", "Dagger/Hilt", "Docker", "Jenkins", "Material Design"]
+    category: "Work Experience",
+    desc: "Spearheaded a full cross-platform migration from native Android and iOS codebases to Kotlin Multiplatform (KMP), using Gradle product flavors for 12+ educational institutions with 15,000+ active users.",
+    bullets: [
+      "Spearheaded a full cross-platform migration from native Android and iOS codebases to Kotlin Multiplatform (KMP), using Gradle product flavors to power white-label applications deployed across 12+ educational institutions for 15,000+ active students and parents.",
+      "Engineered dynamic real-time data synchronization and live chat infrastructure by integrating Firebase and modern Android Jetpack libraries (ViewModel, LiveData, Navigation, Coroutines).",
+      "Implemented end-to-end CI/CD pipelines utilizing Git, Docker, and GitHub Actions to automate testing and build deployments, significantly reducing manual release cycles and maintaining zero-downtime application continuity."
+    ],
+    skills: ["Kotlin Multiplatform (KMP)", "Android Jetpack", "Firebase", "Coroutines", "Docker", "GitHub Actions", "Gradle", "CI/CD"]
   },
   {
     role: "Research Intern",
-    company: "Hochschule Zittau/Görlitz",
+    company: "Hochschule Zittau/Görlitz (Advisor: Prof. Dr. Knut Meissner)",
     location: "Zittau, Germany",
-    date: "Jun 2024 – Aug 2024",
-    desc: "Conducted heuristic evaluations and user research to enhance interaction design of wearable interfaces, documenting findings to improve spatial UX for departmental research use. Developed voice-controlled Android apps in Java and Kotlin for RealWear Navigator 520 wearable hardware, integrating REST APIs for real-time data retrieval. Prototyped a 3D CAVE environment in Unity for spatial AR/VR interaction research, applying multi-threaded rendering and structured concurrency patterns.",
-    skills: ["Kotlin", "Java", "Unity", "REST API", "RealWear", "AR/VR", "UX Research"]
+    date: "June 2024 – Aug 2024",
+    category: "Research Experience",
+    desc: "Architected a hands-free, voice-controlled Android Jetpack Compose application for the RealWear Navigator 520 smart glasses to streamline warehouse operations.",
+    bullets: [
+      "Architected a hands-free, voice-controlled Android Jetpack Compose application for the RealWear Navigator 520 smart glasses to streamline warehouse operations, including task assignment to robots and inventory management.",
+      "Engineered the backend infrastructure using Spring Boot and SQL, deploying microservices on AWS (EC2, RDS, Route53) with Jenkins automating the CI/CD build and deployment pipelines.",
+      "Built a functional 3D CAVE environment prototype in Unity for spatial research and hardware testing within university laboratories."
+    ],
+    skills: ["Jetpack Compose", "RealWear Navigator 520", "Spring Boot", "SQL", "AWS (EC2, RDS, Route53)", "Jenkins CI/CD", "Unity", "3D CAVE"]
   },
   {
-    role: "Teaching Assistant – Developing Mobile Applications",
-    company: "The British College",
-    location: "Kathmandu, Nepal",
-    date: "Feb 2024 – May 2024",
-    desc: "Worked under the mentorship and guidance of Miss Anita Gurung Rana, Assistant Programme Leader, supporting the delivery of the Developing Mobile Applications module. Facilitated weekly lab sessions on UI principles, design thinking, and heuristic evaluation for a cohort of undergraduate students. Guided students through Android app development using Jetpack Compose, providing design feedback aligned with Material Design and usability best practices. Supported students in applying human-centered design methods, from user research and wireframing through to high-fidelity prototyping and usability testing.",
-    skills: ["Jetpack Compose", "Material Design", "UX Design", "Design Thinking", "Teaching"]
-  },
-  {
-    role: "Software Engineering Intern",
+    role: "Android Developer Intern",
     company: "F1Soft International",
     location: "Kathmandu, Nepal",
     date: "Sept 2022 – Feb 2023",
-    desc: "Implemented Google Material Design guidelines to faithfully translate Figma designs into production UI, ensuring visual consistency across components and interaction states. Built and maintained Android (Kotlin/Java) and iOS (Swift/SwiftUI) features using MVVM architecture, Retrofit for REST API integration, and Room for local persistence. Integrated biometric authentication (BiometricPrompt / LocalAuthentication) and Google Maps SDK across both Android and iOS platforms.",
-    skills: ["Kotlin", "Java", "Swift", "SwiftUI", "MVVM", "Retrofit", "Room", "Biometric Auth", "Google Maps"]
+    category: "Work Experience",
+    desc: "Engineered core mobile banking application features deployed across 50+ financial institutions, architecting scalable mobile layers using MVVM, Clean Architecture, and Dagger/Hilt.",
+    bullets: [
+      "Engineered core mobile banking application features deployed across 50+ financial institutions, architecting scalable mobile layers using MVVM, Clean Architecture, and Dagger/Hilt for dependency injection.",
+      "Designed and implemented secure end-to-end payment flows to transmit data payloads seamlessly with external partner bank networks.",
+      "Developed complex custom Android views using XML Layouts and authored automated unit and UI testing suites using JUnit and Espresso to ensure robust payment flow stability."
+    ],
+    skills: ["Android", "Kotlin", "MVVM", "Clean Architecture", "Dagger/Hilt", "JUnit", "Espresso", "XML Layouts", "Payment Flows"]
   }
 ];
 
