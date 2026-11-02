@@ -14,7 +14,7 @@ export function useHeroTitleFacade(): {
 
   const handlePointerMove = useCallback((event: ReactPointerEvent<HTMLHeadingElement>) => {
     if (event.pointerType !== 'mouse' || reducedMotionRef.current) return;
-    const radius = 118;
+    const radius = 155;
     event.currentTarget.querySelectorAll<HTMLElement>('.hero-title__char').forEach(character => {
       const bounds = character.getBoundingClientRect();
       const centerX = bounds.left + bounds.width / 2;
@@ -28,7 +28,7 @@ export function useHeroTitleFacade(): {
         return;
       }
 
-      const force = (1 - distance / radius) ** 2 * 16;
+      const force = (1 - distance / radius) ** 2 * 25;
       const direction = distance === 0 ? 1 : 1 / distance;
       character.style.setProperty('--char-push-x', `${(dx * direction * force).toFixed(2)}px`);
       character.style.setProperty('--char-push-y', `${(dy * direction * force).toFixed(2)}px`);

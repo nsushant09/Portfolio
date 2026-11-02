@@ -41,7 +41,7 @@ export function useNavigationFacade(enabled: boolean) {
 
     const updateNavigation = () => {
       const aboutElement = document.getElementById('about');
-      const worksElement = document.getElementById('work');
+      const worksElement = document.getElementById('selected-work');
 
       if (window.scrollY < 120) {
         setActiveSection('home');

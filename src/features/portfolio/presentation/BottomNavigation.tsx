@@ -37,7 +37,7 @@ export function BottomNavigation({
           </div>
           <nav aria-label="Main navigation" className="bottom-nav-links">
             <a aria-current={activeSection === 'home' ? 'page' : undefined} href="#top" onClick={onClose}><span>Home</span><small>01</small></a>
-            <a aria-current={activeSection === 'works' ? 'location' : undefined} href="#work" onClick={onClose}><span>Works</span><small>02</small></a>
+            <a aria-current={activeSection === 'works' ? 'location' : undefined} href="#selected-work" onClick={onClose}><span>Works</span><small>02</small></a>
             <a aria-current={activeSection === 'about' ? 'location' : undefined} href="#about" onClick={onClose}><span>About</span><small>03</small></a>
             <a href={resumeHref} onClick={onClose} rel="noreferrer" target="_blank"><span>Resume</span><small>↗</small></a>
             <a className="bottom-nav-booking" href="mailto:hello@sushantneupane.com?subject=Book%20a%20call" onClick={onClose}><span>Book a call</span><small>↗</small></a>

@@ -1,11 +1,15 @@
 import type { CSSProperties } from 'react';
 import resumeUrl from './assets/Sushant_Resume.pdf';
 import DotGrid from './core/ui/DotGrid';
-import { brightenColor } from './features/portfolio/domain/colorPalettes';
+import { CASE_STUDIES } from './features/portfolio/domain/selectedWork';
 import { BottomNavigation } from './features/portfolio/presentation/BottomNavigation';
+import { CaseStudyPage } from './features/portfolio/presentation/CaseStudyPage';
 import { CustomCursor } from './features/portfolio/presentation/CustomCursor';
 import { PortfolioIntro } from './features/portfolio/presentation/PortfolioIntro';
 import { NotFoundPage } from './features/portfolio/presentation/NotFoundPage';
+import { SelectedWork } from './features/portfolio/presentation/SelectedWork';
+import { ExperienceTimeline } from './features/portfolio/presentation/ExperienceTimeline';
+import { ThemePullSwitch } from './features/portfolio/presentation/ThemePullSwitch';
 import { useNavigationFacade } from './features/portfolio/presentation/useNavigationFacade';
 import { useIntroFacade } from './features/portfolio/presentation/useIntroFacade';
 import { useColorPaletteFacade } from './features/portfolio/presentation/useColorPaletteFacade';
@@ -28,7 +32,26 @@ function titleCharacters(text: string) {
 }
 
 function App() {
-  const { palettes, activePalette, selectPalette, primaryContrast, primaryForegroundContrast, textContrast } = useColorPaletteFacade();
+  const paletteState = useColorPaletteFacade();
+  const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+  const selectedCaseStudy = CASE_STUDIES.find(project => currentPath === `/work/${project.id}`);
+
+  if (selectedCaseStudy) {
+    return <CaseStudyPage isLightMode={paletteState.isLightMode} onToggleLighting={paletteState.toggleLighting} palette={paletteState.activePalette} project={selectedCaseStudy} />;
+  }
+  if (currentPath !== '/' && currentPath !== '/index.html') {
+    return <NotFoundPage palette={paletteState.activePalette} />;
+  }
+
+  return <PortfolioHome paletteState={paletteState} />;
+}
+
+interface PortfolioHomeProps {
+  readonly paletteState: ReturnType<typeof useColorPaletteFacade>;
+}
+
+function PortfolioHome({ paletteState }: PortfolioHomeProps) {
+  const { palettes, activePalette, isLightMode, toggleLighting, selectPalette, primaryContrast, primaryForegroundContrast, textContrast } = paletteState;
   const { isHomeVisible, isIntroVisible } = useIntroFacade();
   const { activeSection, isMenuOpen, isNavigationVisible, menuButtonRef, closeMenu, toggleMenu } = useNavigationFacade(isHomeVisible);
   const { titleRef, handlePointerMove, resetPosition } = useHeroTitleFacade();
@@ -42,25 +65,22 @@ function App() {
     '--muted': activePalette.colors.muted,
   };
 
-  if (window.location.pathname !== '/' && window.location.pathname !== '/index.html') {
-    return <NotFoundPage palette={activePalette} />;
-  }
-
   return (
     <main className="retro-page min-h-screen overflow-x-clip bg-[var(--page)] text-[var(--text)] transition-colors duration-500" style={themeStyle}>
       <PortfolioIntro visible={isIntroVisible} />
       <div className={`retro-shell mx-auto w-full max-w-7xl px-4 sm:px-8 ${isHomeVisible ? 'retro-shell--ready' : ''}`} inert={!isHomeVisible || isMenuOpen}>
         <div className={`home-content ${isHomeVisible ? 'home-content--visible' : ''}`} aria-hidden={!isHomeVisible} inert={!isHomeVisible}>
           <section aria-labelledby="hero-title" className="hero-fullscreen" id="top">
+            <ThemePullSwitch isLightMode={isLightMode} onToggle={toggleLighting} />
             <div aria-hidden="true" className="hero-dot-grid">
               {isHomeVisible && <DotGrid
-                activeColor={brightenColor(activePalette.colors.primary, 0.4)}
+                activeColor={activePalette.colors.primary}
                 baseColor={activePalette.colors.text}
                 clickShock
                 dotSize={3}
                 enabled={isHomeVisible}
                 gap={25}
-                opacity={0.68}
+                opacity={0.82}
                 proximity={150}
                 strength={0.75}
               />}
@@ -69,7 +89,7 @@ function App() {
               <h1 aria-label="From first principles to production." className="hero-title" id="hero-title" onPointerLeave={resetPosition} onPointerMove={handlePointerMove} ref={titleRef}><span aria-hidden="true" className="hero-title__line">{titleCharacters('From first')}</span><span aria-hidden="true" className="hero-title__line">{titleCharacters('principles to')}</span><span aria-hidden="true" className="hero-title__line font-cinzel">{titleCharacters('production.')}</span></h1>
               <p className="hero-description" id="about">I engineer mobile applications and the resilient services behind them, carrying considered ideas from architecture through deployment and into the hands of their users.</p>
               <div className="hero-actions">
-                <a className="retro-button hero-primary-action" href="#work">Explore selected work <span aria-hidden="true">↘</span></a>
+                <a className="retro-button hero-primary-action" href="#selected-work">Explore selected work <span aria-hidden="true">↘</span></a>
                 <a className="hero-secondary-action" href={resumeUrl} rel="noreferrer" target="_blank">Read my resume <span aria-hidden="true">↗</span></a>
               </div>
               <div className="hero-specialties" aria-label="Specialties">
@@ -79,7 +99,7 @@ function App() {
             </div>
           </section>
 
-          <section aria-label="Mobile application development and delivery capabilities" className="capability-marquee" id="expertise">
+          <section aria-label="Digital product design, development, and delivery capabilities" className="capability-marquee" id="expertise">
             <p className="sr-only">Web Design, UI and UX Audits, Web and Mobile Development, Cloud Infrastructure, DevOps and Delivery, and Applied Research.</p>
             <div aria-hidden="true" className="capability-track">
               <span>Web Design <b>✳</b> UI / UX Audits <b>✳</b> Web &amp; Mobile Development <b>✳</b> Cloud Infrastructure <b>✳</b> DevOps &amp; Delivery <b>✳</b> Applied Research <b>✳</b></span>
@@ -87,35 +107,8 @@ function App() {
             </div>
           </section>
 
-          <section aria-labelledby="work-title" className="work-showcase py-12 sm:py-16" id="work">
-            <div className="work-copy">
-              <p className="work-eyebrow">Research / Virtual reality</p>
-              <h2 className="font-cinzel" id="work-title">Look to Pace</h2>
-              <p className="work-description">A gaze-supported walking-in-place experience that adapts movement speed through eye gaze and body kinematics.</p>
-              <div className="work-tags"><span>Unity</span><span>Real-time systems</span><span>20-participant study</span></div>
-              <p className="work-credit">Graduate Research Assistant · La Trobe University</p>
-            </div>
-            <div aria-label="Featured project preview for Look to Pace" className="retro-art relative mx-auto w-full max-w-[530px]">
-              <div className="art-frame relative aspect-[.91] overflow-hidden border-2 border-[var(--text)] bg-[var(--surface)] p-3 sm:p-4">
-                <div className="art-inner relative flex h-full flex-col overflow-hidden border border-[var(--text)]/35 px-5 pb-5 pt-4 sm:px-7 sm:pb-7">
-                  <div className="flex items-center justify-between border-b border-[var(--text)]/30 pb-3 text-[8px] font-bold uppercase"><span>La Trobe / Research prototype</span><span>Unity · VR</span></div>
-                  <div className="art-sun absolute left-1/2 top-[47%] h-[62%] w-[62%] -translate-x-1/2 -translate-y-1/2 rounded-full border-[12px] border-[var(--primary)] sm:border-[18px]" />
-                  <div className="art-orbit absolute left-1/2 top-[47%] h-[74%] w-[74%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[var(--text)]/45" />
-                  <div className="art-orbit art-orbit-two absolute left-1/2 top-[47%] h-[90%] w-[90%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[var(--text)]/30" />
-                  <div className="art-disc absolute left-1/2 top-[47%] grid h-[39%] w-[39%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[var(--secondary)] text-center">
-                    <span className="font-cinzel text-[clamp(1.1rem,3vw,2rem)] font-semibold leading-none">PACE<br /><small className="mt-2 block font-sans text-[7px] font-bold uppercase">look to move</small></span>
-                  </div>
-                  <span className="sticker absolute right-[5%] top-[22%] grid h-[68px] w-[68px] rotate-12 place-items-center rounded-full border-2 border-[var(--text)] bg-[var(--page)] text-center text-[8px] font-bold uppercase leading-tight sm:h-[82px] sm:w-[82px]">Gaze<br />guided<br /><b className="text-[var(--primary)]">motion</b></span>
-                  <div className="relative mt-auto flex items-end justify-between border-t border-[var(--text)]/30 pt-3">
-                    <div><span className="text-[8px] font-bold uppercase">Featured research / 01</span><h3 className="font-cinzel mt-1 text-xl font-semibold sm:text-2xl">Look to Pace</h3><p className="mt-1 text-[9px]">Eye gaze · cadence · arm swing</p></div>
-                    <a href="#contact" aria-label="Ask about the Look to Pace project" className="retro-button grid h-10 w-10 place-items-center rounded-full bg-[var(--primary)] text-lg text-[var(--button-text)]">↗</a>
-                  </div>
-                </div>
-                <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 bg-[var(--page)] px-3 text-[8px] font-bold uppercase">Human movement / immersive systems</span>
-              </div>
-              <p className="mt-3 flex justify-between text-[8px] font-bold uppercase"><span>Fig. 01 — Adaptive locomotion</span><span>Research in motion</span></p>
-            </div>
-          </section>
+          <SelectedWork />
+          <ExperienceTimeline />
 
         <section className="py-9 sm:py-12" id="palettes" aria-labelledby="palette-title">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">

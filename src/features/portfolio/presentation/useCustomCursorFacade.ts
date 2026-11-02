@@ -10,10 +10,18 @@ export function useCustomCursorFacade(): RefObject<HTMLDivElement | null> {
     if (!cursor || !finePointer.matches || reducedMotion.matches) return undefined;
 
     document.body.classList.add('custom-cursor-enabled');
+    let latestPointerPosition: { x: number; y: number } | null = null;
 
     const moveCursor = (event: PointerEvent) => {
       if (event.pointerType !== 'mouse') return;
+      latestPointerPosition = { x: event.clientX, y: event.clientY };
       cursor.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0) translate(-50%, -50%)`;
+      cursor.classList.add('custom-cursor--visible');
+    };
+
+    const restoreCursor = () => {
+      if (!latestPointerPosition) return;
+      cursor.style.transform = `translate3d(${latestPointerPosition.x}px, ${latestPointerPosition.y}px, 0) translate(-50%, -50%)`;
       cursor.classList.add('custom-cursor--visible');
     };
 
@@ -40,6 +48,7 @@ export function useCustomCursorFacade(): RefObject<HTMLDivElement | null> {
     window.addEventListener('pointerdown', setPressed, { passive: true });
     window.addEventListener('pointerup', releasePressed, { passive: true });
     window.addEventListener('pointerout', hideCursor);
+    window.addEventListener('portfolio:website-viewer-close', restoreCursor);
 
     return () => {
       document.body.classList.remove('custom-cursor-enabled');
@@ -48,6 +57,7 @@ export function useCustomCursorFacade(): RefObject<HTMLDivElement | null> {
       window.removeEventListener('pointerdown', setPressed);
       window.removeEventListener('pointerup', releasePressed);
       window.removeEventListener('pointerout', hideCursor);
+      window.removeEventListener('portfolio:website-viewer-close', restoreCursor);
     };
   }, []);
 
