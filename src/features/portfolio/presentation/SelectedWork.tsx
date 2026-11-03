@@ -13,7 +13,7 @@ function ProjectArtwork({ project, kind, index }: { readonly project: PortfolioP
         <span aria-hidden="true" className="website-image-backing" />
         <div className="website-image-frame">
           {project.image
-            ? <img alt={project.imageAlt ?? `${project.title} website screenshot`} className="website-image" src={project.image} />
+            ? <img alt={project.imageAlt ?? `${project.title} website screenshot`} className="website-image" decoding="async" loading="lazy" src={project.image} />
             : <div className="website-image-placeholder">
                 <span className="website-placeholder-top"><i /><i /><i /><b>{project.title.toUpperCase()}</b></span>
                 <span className="website-placeholder-layout"><i /><b /><em /></span>
@@ -32,12 +32,12 @@ function ProjectArtwork({ project, kind, index }: { readonly project: PortfolioP
         ? <div aria-label={`${project.title} app screenshots`} className="mobile-screen-gallery" role="region" tabIndex={0}>
             {project.screenshots.map((screenshot, screenshotIndex) => (
               <div className={`mobile-screen-preview mobile-screen-preview--${screenshotIndex + 1}`} key={screenshot.src}>
-                <img alt={screenshot.alt} src={screenshot.src} />
+                <img alt={screenshot.alt} decoding="async" loading="lazy" src={screenshot.src} />
               </div>
             ))}
           </div>
         : project.image
-        ? <img alt={project.imageAlt ?? `${project.title} project preview`} className="project-artwork-image" src={project.image} />
+        ? <img alt={project.imageAlt ?? `${project.title} project preview`} className="project-artwork-image" decoding="async" loading="lazy" src={project.image} />
         : <div aria-hidden="true" className="project-artwork-placeholder">
             <span className="placeholder-frame"><i /><i /><i /><b /><em /></span>
             <span className="placeholder-index">{kind === 'mobile' ? 'APP' : 'WEB'} / 0{index + 1}</span>
