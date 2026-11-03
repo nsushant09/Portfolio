@@ -1,3 +1,5 @@
+import { triggerInteractionFeedback } from '../../../core/presentation/interactionFeedback';
+
 interface ThemePullSwitchProps {
   readonly isLightMode: boolean;
   readonly onToggle: () => void;
@@ -9,7 +11,10 @@ export function ThemePullSwitch({ isLightMode, onToggle }: ThemePullSwitchProps)
       aria-label={`Pull to switch to ${isLightMode ? 'dark' : 'light'} mode`}
       aria-pressed={isLightMode}
       className={`theme-pull-switch ${isLightMode ? 'theme-pull-switch--light' : ''}`}
-      onClick={onToggle}
+      onClick={() => {
+        triggerInteractionFeedback();
+        onToggle();
+      }}
       type="button"
     >
       <span aria-hidden="true" className="theme-pull-switch__shade" />

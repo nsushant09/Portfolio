@@ -1,19 +1,26 @@
 import { useEffect, useState } from 'react';
 import {
   COLOR_PALETTES,
-  contrastRatio,
   type ColorPaletteId,
 } from '../domain/colorPalettes';
 
+const PALETTE_STORAGE_KEY = 'portfolio-palette-v2';
+const LEGACY_PALETTE_STORAGE_KEY = 'portfolio-palette';
+const DEFAULT_PALETTE_ID: ColorPaletteId = 'combination-5';
+
 function initialPaletteId(): ColorPaletteId {
-  if (typeof window === 'undefined') return 'combination-3';
+  if (typeof window === 'undefined') return DEFAULT_PALETTE_ID;
   try {
-    const storedPaletteId = window.localStorage.getItem('portfolio-palette');
-    return COLOR_PALETTES.some(palette => palette.id === storedPaletteId)
-      ? storedPaletteId as ColorPaletteId
-      : 'combination-3';
+    const savedPaletteId = window.localStorage.getItem(PALETTE_STORAGE_KEY);
+    if (COLOR_PALETTES.some(palette => palette.id === savedPaletteId)) return savedPaletteId as ColorPaletteId;
+
+    const legacyPaletteId = window.localStorage.getItem(LEGACY_PALETTE_STORAGE_KEY);
+    if (COLOR_PALETTES.some(palette => palette.id === legacyPaletteId) && legacyPaletteId !== 'combination-3') {
+      return legacyPaletteId as ColorPaletteId;
+    }
+    return DEFAULT_PALETTE_ID;
   } catch {
-    return 'combination-3';
+    return DEFAULT_PALETTE_ID;
   }
 }
 
@@ -24,7 +31,8 @@ export function useColorPaletteFacade() {
 
   useEffect(() => {
     try {
-      window.localStorage.setItem('portfolio-palette', activePaletteId);
+      window.localStorage.setItem(PALETTE_STORAGE_KEY, activePaletteId);
+      window.localStorage.removeItem(LEGACY_PALETTE_STORAGE_KEY);
     } catch {
       // Keep the selected theme in memory when storage is unavailable.
     }
@@ -35,13 +43,8 @@ export function useColorPaletteFacade() {
   };
 
   return {
-    palettes: COLOR_PALETTES,
     activePalette,
     isLightMode,
     toggleLighting,
-    selectPalette: setActivePaletteId,
-    primaryContrast: contrastRatio(activePalette.colors.primary, activePalette.colors.page),
-    primaryForegroundContrast: contrastRatio(activePalette.colors.primaryForeground, activePalette.colors.primary),
-    textContrast: contrastRatio(activePalette.colors.text, activePalette.colors.page),
   };
 }

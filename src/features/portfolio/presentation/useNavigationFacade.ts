@@ -40,7 +40,7 @@ export function useNavigationFacade(enabled: boolean) {
     let animationFrame = 0;
 
     const updateNavigation = () => {
-      const aboutElement = document.getElementById('about');
+      const aboutElement = document.getElementById('about-me');
       const worksElement = document.getElementById('selected-work');
 
       if (window.scrollY < 120) {
@@ -52,8 +52,8 @@ export function useNavigationFacade(enabled: boolean) {
       const aboutTop = aboutElement?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY;
       const worksTop = worksElement?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY;
 
-      if (worksTop <= activeLine) setActiveSection('works');
-      else if (aboutTop <= activeLine) setActiveSection('about');
+      if (aboutTop <= activeLine) setActiveSection('about');
+      else if (worksTop <= activeLine) setActiveSection('works');
       else setActiveSection('home');
     };
 

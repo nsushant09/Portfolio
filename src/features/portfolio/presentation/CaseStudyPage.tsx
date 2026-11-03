@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import DotGrid from '../../../core/ui/DotGrid';
 import type { ColorPalette } from '../domain/colorPalettes';
-import type { CaseStudyContent } from '../domain/selectedWork';
+import { destinationLabel, type CaseStudyContent } from '../domain/selectedWork';
 import { CustomCursor } from './CustomCursor';
 import { ThemePullSwitch } from './ThemePullSwitch';
 
@@ -64,7 +64,7 @@ export function CaseStudyPage({ palette, isLightMode, onToggleLighting, project 
         </section>
 
         <section aria-labelledby="case-context-title" className="case-study-story case-study-story--lead">
-          <p className="case-study-story-index">01 / The research</p>
+          <p className="case-study-story-index">The research</p>
           <div>
             <h2 className="font-cinzel" id="case-context-title">{project.contextTitle}</h2>
             <p>{project.contextBody}</p>
@@ -73,7 +73,7 @@ export function CaseStudyPage({ palette, isLightMode, onToggleLighting, project 
 
         <section aria-labelledby="case-system-title" className="case-study-system-panel">
           <div className="case-study-system-copy">
-            <p className="case-study-story-index">02 / The interaction</p>
+            <p className="case-study-story-index">The interaction</p>
             <h2 className="font-cinzel" id="case-system-title">{project.interactionTitle}</h2>
             <p>{project.interactionBody}</p>
           </div>
@@ -83,7 +83,7 @@ export function CaseStudyPage({ palette, isLightMode, onToggleLighting, project 
         </section>
 
         <section aria-labelledby="case-study-frame-title" className="case-study-story case-study-study">
-          <p className="case-study-story-index">03 / The study frame</p>
+          <p className="case-study-story-index">The study frame</p>
           <div>
             <h2 className="font-cinzel" id="case-study-frame-title">{project.studyTitle}</h2>
             <p>{project.studyBody}</p>
@@ -93,7 +93,10 @@ export function CaseStudyPage({ palette, isLightMode, onToggleLighting, project 
 
         <footer className="case-study-footer">
           <a className="retro-button case-study-back-button" href="/#selected-work">Back to selected work <span aria-hidden="true">↗</span></a>
-          <a href={`mailto:hello@sushantneupane.com?subject=${encodeURIComponent(project.title)}`}>Discuss a project <span aria-hidden="true">↗</span></a>
+          <div className="case-study-external-links">
+            {project.destinations.map(destination => <a href={destination.url} key={`${destination.kind}-${destination.url}`} rel="noreferrer" target="_blank">{destinationLabel(destination)} <span aria-hidden="true">↗</span></a>)}
+          </div>
+          <a href={`mailto:nsushant09@gmail.com?subject=${encodeURIComponent(project.title)}`}>Discuss a project <span aria-hidden="true">↗</span></a>
         </footer>
       </div>
       <CustomCursor />

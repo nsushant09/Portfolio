@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, type PointerEvent as ReactPointerEvent, type RefObject } from 'react';
+import { triggerInteractionFeedback } from '../../../core/presentation/interactionFeedback';
 
 export function useHeroTitleFacade(): {
   readonly titleRef: RefObject<HTMLHeadingElement | null>;
+  readonly handlePointerEnter: (event: ReactPointerEvent<HTMLHeadingElement>) => void;
   readonly handlePointerMove: (event: ReactPointerEvent<HTMLHeadingElement>) => void;
   readonly resetPosition: () => void;
 } {
@@ -35,6 +37,10 @@ export function useHeroTitleFacade(): {
     });
   }, []);
 
+  const handlePointerEnter = useCallback((_event: ReactPointerEvent<HTMLHeadingElement>) => {
+    triggerInteractionFeedback();
+  }, []);
+
   const resetPosition = useCallback(() => {
     titleRef.current?.querySelectorAll<HTMLElement>('.hero-title__char').forEach(character => {
       character.style.setProperty('--char-push-x', '0px');
@@ -42,5 +48,5 @@ export function useHeroTitleFacade(): {
     });
   }, []);
 
-  return { titleRef, handlePointerMove, resetPosition };
+  return { titleRef, handlePointerEnter, handlePointerMove, resetPosition };
 }

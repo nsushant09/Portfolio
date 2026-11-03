@@ -36,13 +36,20 @@ export function BottomNavigation({
             <button aria-label="Close navigation menu" className="bottom-nav-close" onClick={onClose} type="button">×</button>
           </div>
           <nav aria-label="Main navigation" className="bottom-nav-links">
-            <a aria-current={activeSection === 'home' ? 'page' : undefined} href="#top" onClick={onClose}><span>Home</span><small>01</small></a>
-            <a aria-current={activeSection === 'works' ? 'location' : undefined} href="#selected-work" onClick={onClose}><span>Works</span><small>02</small></a>
-            <a aria-current={activeSection === 'about' ? 'location' : undefined} href="#about" onClick={onClose}><span>About</span><small>03</small></a>
+            <a aria-current={activeSection === 'home' ? 'page' : undefined} href="#top" onClick={onClose}><span>Home</span></a>
+            <a aria-current={activeSection === 'works' ? 'location' : undefined} href="#selected-work" onClick={onClose}><span>Works</span></a>
+            <a aria-current={activeSection === 'about' ? 'location' : undefined} href="#about-me" onClick={onClose}><span>About</span></a>
             <a href={resumeHref} onClick={onClose} rel="noreferrer" target="_blank"><span>Resume</span><small>↗</small></a>
-            <a className="bottom-nav-booking" href="mailto:hello@sushantneupane.com?subject=Book%20a%20call" onClick={onClose}><span>Book a call</span><small>↗</small></a>
+            <a className="bottom-nav-booking" href="mailto:nsushant09@gmail.com?subject=Book%20a%20call" onClick={onClose}><span>Book a call</span><small>↗</small></a>
           </nav>
-          <div className="bottom-nav-panel-footer"><span>Melbourne, Australia</span><a href="mailto:hello@sushantneupane.com">Send an email ↗</a></div>
+          <div className="bottom-nav-panel-footer">
+            <span>Melbourne, Australia</span>
+            <div className="bottom-nav-socials">
+              <a href="https://www.linkedin.com/in/nsushant09/" rel="noreferrer" target="_blank">LinkedIn ↗</a>
+              <a href="https://github.com/nsushant09" rel="noreferrer" target="_blank">GitHub ↗</a>
+              <a href="mailto:nsushant09@gmail.com">Email ↗</a>
+            </div>
+          </div>
         </section>
 
         <div className="bottom-nav-dock">
