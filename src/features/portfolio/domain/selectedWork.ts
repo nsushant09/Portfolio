@@ -155,24 +155,4 @@ export const LOOK_TO_PACE: CaseStudyContent = {
   studyBody: 'The experience was examined in a 20-participant study. The work sits at the intersection of immersive systems, human movement, and interaction design.',
 };
 
-export const CASE_STUDY_PREVIEW: CaseStudyContent = {
-  id: 'case-study-preview',
-  title: 'Case study title',
-  category: 'Project / Case study preview',
-  description: 'A second full-width case study preview. Add a project image and story to turn this space into a complete project feature.',
-  role: 'Role to be added',
-  organization: 'Organization to be added',
-  format: 'Project format to be added',
-  study: 'Project details to come',
-  tags: ['Context', 'Approach', 'Outcome'],
-  destinations: [],
-  contextTitle: 'Start with the context.',
-  contextBody: 'Use this section to introduce the project, the people it served, and the problem or opportunity that shaped the work.',
-  interactionTitle: 'Show how the idea took shape.',
-  interactionBody: 'Describe the design and engineering decisions, the interaction model, and the systems that brought the project to life.',
-  flowLabels: ['Context', 'Approach', 'Outcome'],
-  studyTitle: 'Close with the result.',
-  studyBody: 'Add the outcome, what changed, and any evidence that helps visitors understand the project’s impact.',
-};
-
-export const CASE_STUDIES: readonly CaseStudyContent[] = [LOOK_TO_PACE, CASE_STUDY_PREVIEW];
+export const CASE_STUDIES: readonly CaseStudyContent[] = [LOOK_TO_PACE];

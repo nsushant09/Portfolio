@@ -109,8 +109,8 @@ function WebsiteWorkSection() {
                       <span className="project-card-kicker">Websites <span>/</span> 0{index + 1}</span>
                       <h4 className="font-cinzel">{project.title}</h4>
                       <p>{project.description}</p>
-                      <span className="project-preview-note">{destination ? destinationLabel(destination) : project.note}</span>
-                      <span className="website-project-open">{destination ? `Open ${destinationLabel(destination)}` : 'Project link to be added'} <b aria-hidden="true">{destination ? '↗' : '·'}</b></span>
+                      <span className="project-preview-note">{project.note}</span>
+                      <span className="website-project-open">{destination ? 'Visit website' : 'Project link to be added'} <b aria-hidden="true">{destination ? '↗' : '·'}</b></span>
                     </div>
                   </>
                 );
@@ -118,7 +118,7 @@ function WebsiteWorkSection() {
                 const cardStyle = { '--project-index': index } as ProjectStyle;
 
                 return destination
-                  ? <a aria-label={`Open ${project.title} at ${destinationLabel(destination)}`} className={cardClass} href={destination.url} key={project.id} rel="noreferrer" style={cardStyle} target="_blank">{content}</a>
+                  ? <a aria-label={`Visit ${project.title} website in a new tab`} className={cardClass} href={destination.url} key={project.id} rel="noreferrer" style={cardStyle} target="_blank">{content}</a>
                   : <article aria-label={`${project.title} project preview`} className={cardClass} key={project.id} style={cardStyle}>{content}</article>;
               })}
             </div>
