@@ -154,6 +154,7 @@ h2 { line-height: 1.1; }
 .website-work-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; background-color: var(--page); background-image: radial-gradient(color-mix(in srgb, var(--text) 12%, transparent) .65px, transparent .65px); background-position: -2px -2px; background-size: 5px 5px; }
 .website-work-heading { position: absolute; z-index: 2; top: clamp(42px, 8vh, 88px); right: 7vw; left: 7vw; display: flex; align-items: end; justify-content: space-between; gap: 20px; }
 .website-work-heading > p span { margin-left: 8px; color: var(--primary); font-size: 16px; }
+.website-work-cue { display: none; }
 .website-work-window { position: absolute; inset: 23vh 0 12vh; overflow: hidden; }
 .website-work-track { position: absolute; top: 0; left: 7vw; display: flex; height: 100%; align-items: stretch; gap: 24px; width: max-content; will-change: transform; }
 .website-project-card { display: grid; width: min(74vw, 1020px); height: 100%; overflow: hidden; border: 2px solid var(--text); background: var(--surface); color: var(--text); grid-template-columns: 1.12fr .88fr; text-decoration: none; transition: border-color 200ms ease, box-shadow 200ms ease, transform 240ms ease; }
@@ -346,18 +347,33 @@ body.custom-cursor-enabled, body.custom-cursor-enabled * { cursor: none !importa
   .intro-name { font-size: clamp(1.7rem, 7vw, 2.2rem); }
 }
 
-@media (max-width: 760px), (prefers-reduced-motion: reduce) {
+@media (max-width: 760px) {
+  .website-work-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+  .website-work-heading { position: absolute; top: 7vh; right: 20px; left: 20px; align-items: flex-start; flex-direction: column; gap: 12px; padding: 0; }
+  .website-work-cue { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 8px; margin: 0 0 3px; color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+  .website-work-cue span { color: var(--primary); font-size: 16px; }
+  .website-work-window { position: absolute; inset: 24vh 0 12vh; overflow: hidden; }
+  .website-work-track { top: 0; left: 20px; height: 100%; gap: 14px; }
+  .website-project-card { flex: 0 0 min(86vw, 600px); height: 100%; min-height: 0; grid-template-columns: 1fr; grid-template-rows: minmax(0, 42%) minmax(0, 1fr); }
+  .website-project-card .project-artwork { min-height: 0; border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--text) 30%, transparent); }
+  .website-project-copy { min-height: 0; overflow: auto; padding: clamp(14px, 4vw, 20px); }
+  .website-work-progress { position: absolute; right: 20px; bottom: 5vh; left: 20px; width: auto; margin: 0; }
+  .case-studies-list { padding-top: 28px; padding-bottom: clamp(48px, 14vw, 72px); }
+  .case-studies-heading { padding: 22px 0 26px; }
+  .case-study-feature-section { position: relative; top: auto; margin-bottom: 0; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
   .website-work-section { height: auto !important; min-height: 0; }
-  .website-work-stage { position: relative; top: auto; height: auto; min-height: 0; overflow: visible; padding-bottom: 12px; }
-  .website-work-heading { position: relative; top: auto; right: auto; left: auto; align-items: flex-start; flex-direction: column; gap: 13px; padding: 32px 20px 22px; }
-  .website-work-window { position: relative; inset: auto; overflow-x: auto; overflow-y: hidden; padding: 0 20px 18px; scroll-padding-inline: 20px; scroll-snap-type: x mandatory; scrollbar-color: var(--primary) color-mix(in srgb, var(--text) 20%, transparent); }
+  .website-work-stage { position: relative; top: auto; height: auto; min-height: 0; overflow: visible; padding-bottom: 24px; }
+  .website-work-heading { position: relative; top: auto; right: auto; left: auto; align-items: flex-start; flex-direction: column; gap: 12px; padding: 36px 20px 22px; }
+  .website-work-window { position: relative; inset: auto; overflow-x: auto; overflow-y: hidden; padding: 0 20px 14px; scroll-padding-inline: 20px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-inline: contain; }
+  .website-work-window::-webkit-scrollbar { display: none; }
   .website-work-track { position: relative; top: auto; left: auto; height: auto; gap: 14px; padding-right: 20px; transform: none !important; }
-  .website-project-card { flex: 0 0 min(86vw, 600px); min-height: 430px; grid-template-columns: 1fr; scroll-snap-align: start; }
+  .website-project-card { flex: 0 0 min(88vw, 600px); height: auto; min-height: 430px; grid-template-columns: 1fr; grid-template-rows: auto; scroll-snap-align: start; }
   .website-project-card .project-artwork { min-height: 230px; border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--text) 30%, transparent); }
-  .website-project-copy { padding: 19px; }
-  .website-work-progress { position: relative; right: auto; bottom: auto; left: auto; width: calc(100% - 40px); margin: 15px 20px 0; }
-  .case-studies-list { padding-top: 14px; padding-bottom: 0; }
-  .case-study-feature-section { position: relative; top: auto; margin-bottom: 28px; transform: none; }
+  .website-project-copy { min-height: 0; overflow: visible; padding: 19px; }
+  .website-work-progress { position: relative; right: auto; bottom: auto; left: auto; width: calc(100% - 40px); margin: 8px 20px 0; }
 }
 
 @media (max-width: 640px) {
@@ -371,6 +387,8 @@ body.custom-cursor-enabled, body.custom-cursor-enabled * { cursor: none !importa
   .capability-track span { padding: 16px 18px; font-size: 12px; }
   .portfolio-section-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
   .mobile-stack-card { min-height: 0; grid-template-columns: 1fr; }
+  .mobile-stack-card:not(:last-child) { margin-bottom: 14vh; }
+  .mobile-stack-card:last-child { margin-bottom: 4vh; }
   .mobile-stack-card .project-artwork { min-height: 35svh; border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--text) 30%, transparent); }
   .mobile-screen-preview { height: 85%; }
   .mobile-stack-copy { padding: 21px; }

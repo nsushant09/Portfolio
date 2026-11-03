@@ -14,7 +14,7 @@ export function useHorizontalWorkFacade(): HorizontalWorkRefs {
     const track = trackRef.current;
     if (!section || !track) return undefined;
 
-    const media = window.matchMedia('(max-width: 760px), (prefers-reduced-motion: reduce)');
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     let travelDistance = 0;
     let sectionScrollDistance = 0;
     let animationFrame = 0;
@@ -22,10 +22,10 @@ export function useHorizontalWorkFacade(): HorizontalWorkRefs {
     const measure = () => {
       if (media.matches) {
         section.style.height = 'auto';
-        section.style.removeProperty('--website-progress');
         track.style.transform = '';
         travelDistance = 0;
         sectionScrollDistance = 0;
+        updateMobileProgress();
         return;
       }
 
@@ -57,8 +57,18 @@ export function useHorizontalWorkFacade(): HorizontalWorkRefs {
       if (animationFrame === 0) animationFrame = window.requestAnimationFrame(updatePosition);
     };
 
+    const updateMobileProgress = () => {
+      const windowElement = section.querySelector<HTMLElement>('.website-work-window');
+      if (!windowElement) return;
+      const maxScroll = windowElement.scrollWidth - windowElement.clientWidth;
+      const progress = maxScroll > 0 ? windowElement.scrollLeft / maxScroll : 0;
+      section.style.setProperty('--website-progress', progress.toFixed(4));
+    };
+
     const resizeObserver = new ResizeObserver(measure);
     resizeObserver.observe(track);
+    const websiteWindow = section.querySelector<HTMLElement>('.website-work-window');
+    websiteWindow?.addEventListener('scroll', updateMobileProgress, { passive: true });
     window.addEventListener('resize', measure, { passive: true });
     window.addEventListener('scroll', requestPositionUpdate, { passive: true });
     media.addEventListener('change', measure);
@@ -66,6 +76,7 @@ export function useHorizontalWorkFacade(): HorizontalWorkRefs {
 
     return () => {
       resizeObserver.disconnect();
+      websiteWindow?.removeEventListener('scroll', updateMobileProgress);
       window.removeEventListener('resize', measure);
       window.removeEventListener('scroll', requestPositionUpdate);
       media.removeEventListener('change', measure);

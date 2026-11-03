@@ -97,8 +97,9 @@ function WebsiteWorkSection() {
         <div className="website-work-stage">
           <div className="website-work-heading">
             <div><p className="portfolio-section-kicker">Websites</p><h3 className="font-cinzel" id="website-work-title">Client and product websites.</h3></div>
+            <p className="website-work-cue">Swipe to explore <span aria-hidden="true">→</span></p>
           </div>
-          <div aria-label="Website project previews" className="website-work-window" role="region" tabIndex={0}>
+          <div aria-label="Website projects. Swipe horizontally to explore." className="website-work-window" role="region" tabIndex={0}>
             <div className="website-work-track" ref={trackRef}>
               {WEBSITE_PROJECTS.map((project, index) => {
                 const destination = project.destinations[0];
