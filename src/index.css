@@ -607,8 +607,16 @@ body.custom-cursor-enabled, body.custom-cursor-enabled * { cursor: none !importa
 .blog-prose h3 { margin: 30px 0 8px; font-size: 19px; }
 .blog-prose p { color: color-mix(in srgb, var(--text) 88%, transparent); }
 .blog-prose blockquote { padding: 3px 0 3px 18px; border-left: 2px solid var(--primary); color: var(--primary); font-family: 'Cinzel', serif; font-size: 18px; }
+.blog-table-wrap { overflow-x: auto; margin: 24px 0; border: 1px solid color-mix(in srgb, var(--text) 22%, transparent); background: color-mix(in srgb, var(--surface) 72%, var(--page)); }
+.blog-prose table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 12px; line-height: 1.65; }
+.blog-prose th, .blog-prose td { padding: 12px 14px; border-bottom: 1px solid color-mix(in srgb, var(--text) 16%, transparent); text-align: left; vertical-align: top; }
+.blog-prose th { background: color-mix(in srgb, var(--primary) 10%, var(--surface)); color: var(--primary); font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.blog-prose tbody tr:last-child td { border-bottom: 0; }
+.blog-prose tbody tr:nth-child(even) { background: color-mix(in srgb, var(--text) 3%, transparent); }
 .blog-prose code { padding: 2px 5px; background: color-mix(in srgb, var(--text) 9%, transparent); font-size: .9em; }
-.blog-prose pre { overflow-x: auto; padding: 16px; background: color-mix(in srgb, var(--text) 8%, transparent); }
+.blog-prose .blog-code-block { position: relative; overflow-x: auto; padding: 42px 18px 18px; border: 1px solid color-mix(in srgb, var(--text) 16%, transparent); background: color-mix(in srgb, var(--text) 5%, var(--page)); box-shadow: 3px 3px 0 color-mix(in srgb, var(--text) 12%, transparent); }
+.blog-code-language { position: absolute; top: 0; left: 0; padding: 7px 12px; background: color-mix(in srgb, var(--primary) 12%, var(--page)); color: var(--primary); font-family: 'Poppins', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: .1em; line-height: 1; text-transform: uppercase; }
+.blog-prose .blog-code-block code { display: block; padding: 0; background: none; color: var(--text); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace; font-size: 12px; line-height: 1.75; white-space: pre; }
 .blog-prose a { color: var(--primary); }
 .blog-article-footer { display: flex; justify-content: space-between; gap: 20px; padding-top: 24px; margin-top: 50px; border-top: 1px solid color-mix(in srgb, var(--text) 24%, transparent); }
 .blog-state { padding: 50px 0; color: var(--muted); font-size: 13px; }

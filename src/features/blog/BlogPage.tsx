@@ -24,24 +24,102 @@ function inlineMarkdown(text: string): ReactNode[] {
   });
 }
 
+function parseTableRow(line: string): string[] {
+  return line.trim().replace(/^\|/, '').replace(/\|$/, '').split(/(?<!\\)\|/).map(cell => cell.trim().replace(/\\\|/g, '|'));
+}
+
 function MarkdownBody({ source }: { readonly source: string }) {
-  const blocks = source.trim().split(/\n\s*\n/);
-  return <div className="blog-prose">{blocks.map((block, index) => {
-    const lines = block.split('\n');
-    const heading = (lines[0] ?? '').match(/^(#{1,3})\s+(.+)$/);
+  const lines = source.trim().split(/\r?\n/);
+  const blocks: ReactNode[] = [];
+  let index = 0;
+
+  while (index < lines.length) {
+    const line = lines[index] ?? '';
+    if (!line.trim()) { index += 1; continue; }
+
+    const fence = line.match(/^```\s*([\w+-]*)\s*$/);
+    if (fence) {
+      const language = fence[1] || 'code';
+      const codeLines: string[] = [];
+      index += 1;
+      while (index < lines.length && !/^```\s*$/.test(lines[index] ?? '')) {
+        codeLines.push(lines[index] ?? '');
+        index += 1;
+      }
+      if (index < lines.length) index += 1;
+      blocks.push(<pre className="blog-code-block" key={`code-${blocks.length}`}><span className="blog-code-language">{language}</span><code>{codeLines.join('\n')}</code></pre>);
+      continue;
+    }
+
+    const heading = line.match(/^(#{1,3})\s+(.+)$/);
     if (heading) {
       const depth = heading[1]?.length ?? 3;
       const content = inlineMarkdown(heading[2] ?? '');
-      if (depth === 1) return <h2 key={index}>{content}</h2>;
-      if (depth === 2) return <h3 key={index}>{content}</h3>;
-      return <h4 key={index}>{content}</h4>;
+      if (depth === 1) blocks.push(<h2 key={`heading-${blocks.length}`}>{content}</h2>);
+      else if (depth === 2) blocks.push(<h3 key={`heading-${blocks.length}`}>{content}</h3>);
+      else blocks.push(<h4 key={`heading-${blocks.length}`}>{content}</h4>);
+      index += 1;
+      continue;
     }
-    if (lines.every(line => /^[-*]\s+/.test(line))) return <ul key={index}>{lines.map((line, lineIndex) => <li key={lineIndex}>{inlineMarkdown(line.replace(/^[-*]\s+/, ''))}</li>)}</ul>;
-    if (lines.every(line => /^\d+\.\s+/.test(line))) return <ol key={index}>{lines.map((line, lineIndex) => <li key={lineIndex}>{inlineMarkdown(line.replace(/^\d+\.\s+/, ''))}</li>)}</ol>;
-    if (lines.every(line => /^>\s?/.test(line))) return <blockquote key={index}>{lines.map(line => line.replace(/^>\s?/, '')).join(' ')}</blockquote>;
-    if (lines.every(line => /^`{3}/.test(line))) return <pre key={index}><code>{lines.slice(1, -1).join('\n')}</code></pre>;
-    return <p key={index}>{lines.map((line, lineIndex) => <span key={lineIndex}>{lineIndex > 0 && <br />}{inlineMarkdown(line)}</span>)}</p>;
-  })}</div>;
+
+    const nextLine = lines[index + 1] ?? '';
+    const isTableSeparator = /^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?$/.test(nextLine);
+    if (line.includes('|') && isTableSeparator) {
+      const headers = parseTableRow(line);
+      const rows: string[][] = [];
+      index += 2;
+      while (index < lines.length && (lines[index] ?? '').trim().startsWith('|')) {
+        rows.push(parseTableRow(lines[index] ?? ''));
+        index += 1;
+      }
+      blocks.push(<div className="blog-table-wrap" key={`table-${blocks.length}`}><table>
+        <thead><tr>{headers.map((cell, cellIndex) => <th key={cellIndex} scope="col">{inlineMarkdown(cell)}</th>)}</tr></thead>
+        <tbody>{rows.map((row, rowIndex) => <tr key={rowIndex}>{headers.map((_, cellIndex) => <td key={cellIndex}>{inlineMarkdown(row[cellIndex] ?? '')}</td>)}</tr>)}</tbody>
+      </table></div>);
+      continue;
+    }
+
+    if (/^[-*]\s+/.test(line)) {
+      const items: string[] = [];
+      while (index < lines.length && /^[-*]\s+/.test(lines[index] ?? '')) {
+        items.push((lines[index] ?? '').replace(/^[-*]\s+/, ''));
+        index += 1;
+      }
+      blocks.push(<ul key={`list-${blocks.length}`}>{items.map((item, itemIndex) => <li key={itemIndex}>{inlineMarkdown(item)}</li>)}</ul>);
+      continue;
+    }
+
+    if (/^\d+\.\s+/.test(line)) {
+      const items: string[] = [];
+      while (index < lines.length && /^\d+\.\s+/.test(lines[index] ?? '')) {
+        items.push((lines[index] ?? '').replace(/^\d+\.\s+/, ''));
+        index += 1;
+      }
+      blocks.push(<ol key={`list-${blocks.length}`}>{items.map((item, itemIndex) => <li key={itemIndex}>{inlineMarkdown(item)}</li>)}</ol>);
+      continue;
+    }
+
+    if (/^>\s?/.test(line)) {
+      const quote: string[] = [];
+      while (index < lines.length && /^>\s?/.test(lines[index] ?? '')) {
+        quote.push((lines[index] ?? '').replace(/^>\s?/, ''));
+        index += 1;
+      }
+      blocks.push(<blockquote key={`quote-${blocks.length}`}>{quote.join(' ')}</blockquote>);
+      continue;
+    }
+
+    const paragraph: string[] = [];
+    while (index < lines.length) {
+      const next = lines[index] ?? '';
+      if (!next.trim() || /^```/.test(next) || /^#{1,3}\s+/.test(next) || /^[-*]\s+/.test(next) || /^\d+\.\s+/.test(next) || /^>\s?/.test(next)) break;
+      paragraph.push(next);
+      index += 1;
+    }
+    blocks.push(<p key={`paragraph-${blocks.length}`}>{paragraph.map((paragraphLine, lineIndex) => <span key={lineIndex}>{lineIndex > 0 && <br />}{inlineMarkdown(paragraphLine)}</span>)}</p>);
+  }
+
+  return <div className="blog-prose">{blocks}</div>;
 }
 
 function dateLabel(date: string) {
