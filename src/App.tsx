@@ -17,6 +17,7 @@ import { useIntroFacade } from './features/portfolio/presentation/useIntroFacade
 import { useColorPaletteFacade } from './features/portfolio/presentation/useColorPaletteFacade';
 import { useHeroTitleFacade } from './features/portfolio/presentation/useHeroTitleFacade';
 import { useScrollHapticsFacade } from './features/portfolio/presentation/useScrollHapticsFacade';
+import { BlogPage } from './features/blog/BlogPage';
 
 type PaletteStyle = CSSProperties & {
   '--page': string;
@@ -38,6 +39,10 @@ function App() {
   const paletteState = useColorPaletteFacade();
   const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
   const selectedCaseStudy = CASE_STUDIES.find(project => currentPath === `/work/${project.id}`);
+
+  if (currentPath === '/blog' || currentPath.startsWith('/blog/')) {
+    return <BlogPage path={currentPath} palette={paletteState.activePalette} />;
+  }
 
   if (selectedCaseStudy) {
     return <CaseStudyPage isLightMode={paletteState.isLightMode} onToggleLighting={paletteState.toggleLighting} palette={paletteState.activePalette} project={selectedCaseStudy} />;

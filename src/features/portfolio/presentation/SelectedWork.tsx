@@ -174,6 +174,7 @@ export function SelectedWork() {
         <header className="case-studies-heading">
           <p className="portfolio-section-kicker">Writing and research</p>
           <h3 className="font-cinzel" id="case-studies-title">Blogs, case studies &amp; papers.</h3>
+          <a className="writing-archive-link" href="/blog">Read study notes <span aria-hidden="true">↗</span></a>
         </header>
         {CASE_STUDIES.map((project, index) => <CaseStudyFeature index={index} key={project.id} project={project} />)}
       </section>

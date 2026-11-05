@@ -39,6 +39,7 @@ export function BottomNavigation({
             <a aria-current={activeSection === 'home' ? 'page' : undefined} href="#top" onClick={onClose}><span>Home</span></a>
             <a aria-current={activeSection === 'works' ? 'location' : undefined} href="#selected-work" onClick={onClose}><span>Works</span></a>
             <a aria-current={activeSection === 'about' ? 'location' : undefined} href="#about-me" onClick={onClose}><span>About</span></a>
+            <a href="/blog" onClick={onClose}><span>Study notes</span><small>↗</small></a>
             <a href={resumeHref} onClick={onClose} rel="noreferrer" target="_blank"><span>Resume</span><small>↗</small></a>
             <a className="bottom-nav-booking" href="mailto:nsushant09@gmail.com?subject=Book%20a%20call" onClick={onClose}><span>Book a call</span><small>↗</small></a>
           </nav>
