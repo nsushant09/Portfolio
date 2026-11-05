@@ -15,5 +15,7 @@ create table if not exists public.blog_posts (
 alter table public.blog_posts enable row level security;
 drop policy if exists "Anyone can read published blog posts" on public.blog_posts;
 create policy "Anyone can read published blog posts"
-  on public.blog_posts for select
+  on public.blog_posts for select to anon, authenticated
   using (published = true);
+
+grant select on table public.blog_posts to anon, authenticated;

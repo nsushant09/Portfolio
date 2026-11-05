@@ -51,9 +51,16 @@ function dateLabel(date: string) {
 export function BlogPage({ path, palette }: { readonly path: string; readonly palette: ColorPalette }) {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   useEffect(() => {
     let active = true;
-    getPublishedPosts().then(result => { if (active) setPosts(result); }).finally(() => { if (active) setLoading(false); });
+    getPublishedPosts()
+      .then(result => { if (active) setPosts(result); })
+      .catch(error => {
+        console.error('Could not load published blog posts.', error);
+        if (active) setLoadError(true);
+      })
+      .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, []);
   const slug = path.startsWith('/blog/') ? decodeURIComponent(path.slice('/blog/'.length)) : '';
@@ -68,7 +75,7 @@ export function BlogPage({ path, palette }: { readonly path: string; readonly pa
     <header className="blog-topbar"><a href="/" className="blog-wordmark">SN <span>/</span> Notes from the study</a><a className="blog-home-link" href="/">Portfolio <span aria-hidden="true">↗</span></a></header>
     {slug ? <>
       <a className="blog-back-link" href="/blog">← All writing</a>
-      {loading ? <p className="blog-state">Loading article…</p> : post ? <article className="blog-article">
+      {loading ? <p className="blog-state">Loading article…</p> : loadError ? <p className="blog-state">The study notes could not be loaded. Please try again shortly.</p> : post ? <article className="blog-article">
         <p className="blog-kicker">{post.category} <span>/</span> {dateLabel(post.published_at)}</p>
         <h1 className="font-cinzel">{post.title}</h1>
         <p className="blog-article-deck">{post.excerpt}</p>
@@ -78,9 +85,10 @@ export function BlogPage({ path, palette }: { readonly path: string; readonly pa
       </article> : <p className="blog-state">That article could not be found. <a href="/blog">Browse all writing.</a></p>}
     </> : <>
       <section className="blog-index-intro"><p className="blog-kicker">A field journal <span>/</span> Study, practice, reflect</p><h1 className="font-cinzel">Notes along<br /><em>the way.</em></h1><p>Ideas I’m studying, questions I’m following, and lessons from putting them into practice.</p></section>
-      <section className="blog-list" aria-label="Published study notes"><div className="blog-list-heading"><span>Writing &amp; research</span><span>{loading ? '…' : `${posts.length.toString().padStart(2, '0')} posts`}</span></div>
+      <section className="blog-list" aria-label="Published study notes"><div className="blog-list-heading"><span>Writing &amp; research</span><span>{loading ? '…' : loadError ? 'Unavailable' : `${posts.length.toString().padStart(2, '0')} posts`}</span></div>
         {loading ? <p className="blog-state">Gathering the latest notes…</p> : posts.map((item, index) => <article className="blog-card" key={item.slug}><span className="blog-card-number">{String(index + 1).padStart(2, '0')}</span><div className="blog-card-copy"><p className="blog-kicker">{item.category} <span>/</span> {dateLabel(item.published_at)}</p><h2 className="font-cinzel"><a href={`/blog/${item.slug}`}>{item.title}</a></h2><p>{item.excerpt}</p><span className="blog-reading-time">{item.reading_minutes} min read</span></div><a aria-label={`Read ${item.title}`} className="blog-card-arrow" href={`/blog/${item.slug}`}>↗</a></article>)}
-        {!loading && posts.length === 0 && <p className="blog-state">New notes are on the way.</p>}
+        {!loading && loadError && <p className="blog-state">Could not load posts from Supabase. Check that <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> are set in your hosting environment, then redeploy.</p>}
+        {!loading && !loadError && posts.length === 0 && <p className="blog-state">No published notes yet. In Supabase, set the post’s <code>published</code> field to <code>true</code>.</p>}
       </section>
     </>}
     <footer className="blog-site-footer"><a href="/">Sushant Neupane</a><span>Melbourne, Australia · {new Date().getFullYear()}</span></footer>
