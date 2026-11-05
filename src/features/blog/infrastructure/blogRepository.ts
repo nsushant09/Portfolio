@@ -8,7 +8,7 @@ export async function getPublishedPosts(): Promise<BlogPost[]> {
     if (import.meta.env.DEV) return [...LOCAL_POSTS];
     throw new Error('Supabase environment variables are missing from the production build.');
   }
-  const response = await fetch(`${supabaseUrl}/rest/v1/blog_posts?select=slug,title,excerpt,category,published_at,reading_minutes,body&published=true&order=published_at.desc`, {
+  const response = await fetch(`${supabaseUrl}/rest/v1/blog_posts?select=slug,title,excerpt,category,published_at,reading_minutes,body&published=eq.true&order=published_at.desc`, {
     headers: { apikey: supabaseKey },
   });
   if (!response.ok) throw new Error(`Supabase returned ${response.status}`);
